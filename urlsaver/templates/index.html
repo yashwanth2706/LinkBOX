@@ -35,6 +35,144 @@
       </div>
     </nav>
 
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <button
+        class="btn btn-outline-dark btn-sm"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#activityPanel"
+      >
+        Activity
+      </button>
+      <button
+        class="btn btn-outline-primary btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#urlGroupsModal"
+      >
+        URL Groups
+      </button>
+      <button
+        class="btn btn-outline-secondary btn-sm"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#urlGroupsPanel"
+      >
+        Show URL Groups
+      </button>
+    </div>
+
+    <!-- Activity Offcanvas -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="activityPanel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Activity</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <p>
+          <strong>Number of URLs stored:</strong> <span id="url-count">--</span>
+        </p>
+        <hr />
+        <h6>Top 10 Most Visited URLs:</h6>
+        <ul id="top-visited-list" class="list-group list-group-flush">
+          <!-- Example item -->
+          <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
+        https://example.com
+        <span class="badge bg-primary rounded-pill">23</span>
+      </li> -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- URL Groups Modal -->
+    <div class="modal fade" id="urlGroupsModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <form id="url-group-form">
+            <div class="modal-header">
+              <h5 class="modal-title">Add URL Group</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="group-name" class="form-label">Group Name *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="group-name"
+                  required
+                />
+              </div>
+              <div id="linkInputs">
+                <label class="form-label">Links *</label>
+                <input
+                  type="url"
+                  class="form-control mb-2"
+                  placeholder="https://..."
+                  required
+                />
+              </div>
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-sm mt-2"
+                onclick="addLinkInput()"
+              >
+                + Add Link
+              </button>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">
+                Add as Group
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- URL Groups Side Panel -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="urlGroupsPanel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Saved URL Groups</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <table class="table table-bordered table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Group Name</th>
+              <th># of URLs</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="group-list-body">
+            <!-- Example row -->
+            <!-- <tr>
+          <td>1</td>
+          <td>Design Tutorial</td>
+          <td>5</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary">Edit</button>
+            <button class="btn btn-sm btn-outline-success">Launch</button>
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+          </td>
+        </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- URL Input Card -->
     <div class="card shadow">
       <form>
@@ -285,6 +423,21 @@
         }
       }
     </script>
+    <script>
+      function addLinkInput() {
+        const input = document.createElement("input");
+        input.type = "url";
+        input.className = "form-control mb-2";
+        input.placeholder = "https://...";
+        document.getElementById("linkInputs").appendChild(input);
+      }
+
+      // Example: You can later populate top visited list and group list dynamically
+      // document.getElementById("url-count").innerText = "123";
+      // document.getElementById("top-visited-list").innerHTML = "...";
+      // document.getElementById("group-list-body").innerHTML = "...";
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

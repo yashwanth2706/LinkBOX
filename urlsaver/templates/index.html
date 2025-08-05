@@ -425,11 +425,25 @@
     </script>
     <script>
       function addLinkInput() {
+        const wrapper = document.createElement("div");
+        wrapper.className = "d-flex align-items-center mb-2";
+
         const input = document.createElement("input");
         input.type = "url";
-        input.className = "form-control mb-2";
+        input.className = "form-control me-2";
         input.placeholder = "https://...";
-        document.getElementById("linkInputs").appendChild(input);
+        input.required = true;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "btn btn-outline-danger btn-sm";
+        removeBtn.innerText = "-";
+        removeBtn.onclick = () => wrapper.remove();
+
+        wrapper.appendChild(input);
+        wrapper.appendChild(removeBtn);
+
+        document.getElementById("linkInputs").appendChild(wrapper);
       }
 
       // Example: You can later populate top visited list and group list dynamically

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UrlManager</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Courier New", Courier, monospace;
+        background-color: #f8f9fa;
+      }
+      .navbar {
+        background-color: #d1d5dc !important;
+        height: 60px;
+      }
+      .card {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+      textarea {
+        resize: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container">
+        <h4 class="m-0"><strong>UrlManager</strong></h4>
+      </div>
+    </nav>
+
+    <!-- URL Input Card -->
+    <div class="card shadow">
+      <form>
+        <div class="mb-3">
+          <label for="url-textarea" class="form-label"
+            >Enter or paste your URL:</label
+          >
+          <textarea
+            class="form-control"
+            id="url-textarea"
+            rows="2"
+            placeholder="https://example.com"
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Name (optional)</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            placeholder="e.g. Google"
+          />
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category">
+              <option selected disabled>Choose category</option>
+              <option value="youtube">YouTube</option>
+              <option value="facebook">Facebook</option>
+              <option value="instagram">Instagram</option>
+              <option value="website">Website-Link</option>
+              <option value="others">Others</option>
+            </select>
+            <!-- Hidden Initially, shows up when Oters option is selected -->
+            <div class="mt-2" id="custom-category-group" style="display: none">
+              <label for="custom-category" class="form-label"
+                >Custom Category Name</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="custom-category"
+                placeholder="e.g. MySpecialLinks"
+              />
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="sub-category" class="form-label"
+              >Sub Category (optional)</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="sub-category"
+              placeholder="e.g. Free Illustrations"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="tags" class="form-label">Tags (comma separated)</label>
+          <input
+            type="text"
+            class="form-control"
+            id="tags"
+            placeholder="e.g. design, inspiration, vector"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save URL</button>
+      </form>
+    </div>
+
+    <!-- URL Table Card (Placeholder for Results Table) -->
+    <div class="card shadow mt-5">
+      <div class="p-3">
+        <h5>Stored URLs</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Sub Category</th>
+                <th>Tags</th>
+                <th>Preview</th>
+                <th>Export</th>
+                <th>Visit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamically populate rows here -->
+              <tr>
+                <td>Google</td>
+                <td>Website</td>
+                <td>Search Engine</td>
+                <td>search, tools</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-secondary">
+                    Preview
+                  </button>
+                </td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-success">PDF</button>
+                    <button class="btn btn-outline-info">HTML</button>
+                  </div>
+                </td>
+                <td>
+                  <a
+                    href="https://google.com"
+                    target="_blank"
+                    class="btn btn-sm btn-primary"
+                    >Visit</a
+                  >
+                </td>
+              </tr>
+              <!-- Add more rows as needed -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    const categorySelect = document.getElementById("category");
+    const customCategoryGroup = document.getElementById(
+      "custom-category-group"
+    );
+
+    categorySelect.addEventListener("change", function () {
+      if (this.value === "others") {
+        customCategoryGroup.style.display = "block";
+      } else {
+        customCategoryGroup.style.display = "none";
+      }
+    });
+  </script>
+</html>

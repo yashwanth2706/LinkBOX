@@ -45,11 +45,6 @@ def stored_urls_view(request):
 
     return render(request, "stored_urls.html", {"page_obj": page_obj})
 
-from django.views.decorators.http import require_POST
-from django.shortcuts import redirect
-from django.contrib import messages
-from .models import UrlEntry
-
 @require_POST
 def add_url(request):
     name = request.POST.get("name")

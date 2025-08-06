@@ -1,0 +1,10 @@
+{% for url in page_obj %}
+<tr>
+  <td><input type="checkbox" /></td>
+  <td>{{ forloop.counter }}</td>
+  <td>{{ url.name }}</td>
+  <td>{{ url.url }}</td>
+  <td>{{ url.category }}</td>
+  <td>{{ url.deleted_at|date:"Y-m-d" }}</td>
+</tr>
+{% endfor %}

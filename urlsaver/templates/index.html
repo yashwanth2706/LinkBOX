@@ -294,30 +294,6 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><input type="checkbox" /></td>
-                <td>1</td>
-                <td>Google</td>
-                <td>Website</td>
-                <td>Search Engine</td>
-                <td>search, tools</td>
-                <td>
-                  <button class="btn btn-sm btn-outline-secondary">
-                    Preview
-                  </button>
-                </td>
-                <td>
-                  <a
-                    href="https://google.com"
-                    target="_blank"
-                    class="btn btn-sm btn-primary"
-                    >Visit</a
-                  >
-                </td>
-                <td><button class="btn btn-sm btn-danger">Delete</button></td>
-              </tr>
-              <!-- Additional rows go here -->
-            </tbody>
             <tbody>
               {% if page_obj %} 
               {% for url in page_obj %}
@@ -340,7 +316,12 @@
                     >Visit</a
                   >
                 </td>
-                <td><button class="btn btn-sm btn-danger">Delete</button></td>
+                <td>
+            <form method="post" action="{% url 'delete-url' url.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form>
+            </td>
               </tr>
               {% endfor %} 
               {% else %}
@@ -441,7 +422,7 @@
                   <th>Deleted On</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody  id="trashTableBody">
                 <!-- Trash rows here -->
                 <tr>
                   <td><input type="checkbox" /></td>
@@ -453,6 +434,9 @@
                 </tr>
               </tbody>
             </table>
+            <nav>
+                <ul class="pagination pagination-sm justify-content-end" id="trashPagination"></ul>
+            </nav>
             <div class="d-flex justify-content-between">
               <button class="btn btn-outline-success">Retrieve Selected</button>
               <button
@@ -541,6 +525,22 @@
     const showUrlSection = document.getElementById('showUrlSection');
     showUrlSection.style.display = showUrlSection.style.display === 'none' ? 'flex' : 'none';
   }
+</script>
+<script>
+function showTrashPopup(page = 1) {
+  fetch(`/trash-data/?page=${page}`)
+    .then(response => response.text())
+    .then(data => {
+      const result = JSON.parse(data);
+      document.getElementById('trashTableBody').innerHTML = result.rows_html;
+      document.getElementById('trashPagination').innerHTML = result.pagination_html;
+      new bootstrap.Modal(document.getElementById('trashModal')).show();
+    });
+}
+
+function loadTrashPage(page) {
+  showTrashPopup(page);
+}
 </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
   </body>

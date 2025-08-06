@@ -4,6 +4,9 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from django.utils.timezone import now
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 #from django.http import request
 
 # Create your views here.
@@ -70,3 +73,29 @@ def add_url(request):
         messages.error(request, "URL is required.")
 
     return redirect("index")
+@require_POST
+def delete_url(request, pk):
+    url_entry = get_object_or_404(UrlEntry, pk=pk, is_deleted=False)
+    url_entry.is_deleted = True
+    url_entry.deleted_at = now()
+    url_entry.save(update_fields=["is_deleted", "deleted_at"])
+    messages.success(request, "URL deleted successfully.")
+    return redirect('index')
+
+def show_trash(request):
+    trashed_urls = UrlEntry.objects.filter(is_deleted=True).order_by('-deleted_at')
+    return render(request, 'trash.html', {'trashed_urls': trashed_urls})
+
+def trash_data(request):
+    trashed = UrlEntry.objects.filter(is_deleted=True).order_by('-deleted_at')
+    paginator = Paginator(trashed, 5)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    rows_html = render_to_string("partials/trash_rows.html", {"page_obj": page_obj})
+    pagination_html = render_to_string("partials/trash_pagination.html", {"page_obj": page_obj})
+
+    return JsonResponse({
+        "rows_html": rows_html,
+        "pagination_html": pagination_html
+    })

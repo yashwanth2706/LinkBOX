@@ -40,6 +40,14 @@
       <button
         class="btn btn-outline-dark btn-sm"
         data-bs-toggle="offcanvas"
+        data-bs-target="#addUrls"
+        onclick = "toggleUrlsSection();"
+      >
+        + Add URLs
+      </button>
+      <button
+        class="btn btn-outline-dark btn-sm"
+        data-bs-toggle="offcanvas"
         data-bs-target="#activityPanel"
       >
         Activity
@@ -184,7 +192,7 @@
     </div>
 
     <!-- URL Input Card -->
-    <div class="card shadow">
+    <div class="card shadow" id="showUrlSection" style="display: none;">
       <form>
         <div class="mb-3">
           <label for="url-textarea" class="form-label"
@@ -556,6 +564,10 @@
   function toggleFilters() {
     const filterForm = document.getElementById('filterForm');
     filterForm.style.display = filterForm.style.display === 'none' ? 'flex' : 'none';
+  }
+  function toggleUrlsSection() {
+    const showUrlSection = document.getElementById('showUrlSection');
+    showUrlSection.style.display = showUrlSection.style.display === 'none' ? 'flex' : 'none';
   }
 </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>

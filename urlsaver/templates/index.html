@@ -265,6 +265,10 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h5 class="mb-0">Stored URLs</h5>
           <div>
+            <!-- Filter Toggle Button -->
+        <button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleFilters()">
+            Filters
+        </button>
             <button
               class="btn btn-outline-secondary btn-sm"
               onclick="showExportPopup()"
@@ -279,7 +283,21 @@
             </button>
           </div>
         </div>
-
+        <!-- Filter Form (initially hidden) -->
+        <form method="get" class="row g-2 mb-3" id="filterForm" style="display: none;">
+        <div class="col-md-3">
+            <input type="text" name="tag" class="form-control form-control-sm" placeholder="Filter by Tag" value="{{ request.GET.tag }}">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="category" class="form-control form-control-sm" placeholder="Filter by Category" value="{{ request.GET.category }}">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="sub_category" class="form-control form-control-sm" placeholder="Filter by Sub Category" value="{{ request.GET.sub_category }}">
+        </div>
+        <div class="col-md-3 d-flex">
+            <button type="submit" class="btn btn-sm btn-primary w-100">Apply Filters</button>
+        </div>
+        </form>
         <div class="table-responsive">
           <table class="table table-bordered table-hover">
             <thead class="table-light">
@@ -320,6 +338,78 @@
               </tr>
               <!-- Additional rows go here -->
             </tbody>
+            <tbody>
+              {% if page_obj %} 
+              {% for url in page_obj %}
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ url.name }}</td>
+                <td>{{ url.effective_category }}</td>
+                <td>{{ url.sub_category }}</td>
+                <td>{{ url.tags }}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-secondary">
+                    Preview
+                  </button>
+                </td>
+                <td>
+                  <a
+                    href="{% url 'visit-url' url.id %}"
+                    class="btn btn-sm btn-primary"
+                    >Visit</a
+                  >
+                </td>
+                <td><button class="btn btn-sm btn-danger">Delete</button></td>
+              </tr>
+              {% endfor %} 
+              {% else %}
+              <tr>
+                <td colspan="10" class="text-center">No URLs found.</td>
+              </tr>
+              {% endif %}
+            </tbody>
+            <nav aria-label="Page navigation">
+              <ul class="pagination pagination-sm justify-content-end">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="?page={{ page_obj.previous_page_number }}"
+                    >Previous</a
+                  >
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                  <span class="page-link">Previous</span>
+                </li>
+                {% endif %} 
+                {% for num in page_obj.paginator.page_range %} 
+                {% if page_obj.number == num %}
+                <li class="page-item active">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+                {% else %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %} 
+                {% endfor %} 
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="?page={{ page_obj.next_page_number }}"
+                    >Next</a
+                  >
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                  <span class="page-link">Next</span>
+                </li>
+                {% endif %}
+              </ul>
+            </nav>
           </table>
         </div>
       </div>
@@ -461,7 +551,13 @@
       // document.getElementById("top-visited-list").innerHTML = "...";
       // document.getElementById("group-list-body").innerHTML = "...";
     </script>
-
+<!-- Script to toggle filter visibility -->
+<script>
+  function toggleFilters() {
+    const filterForm = document.getElementById('filterForm');
+    filterForm.style.display = filterForm.style.display === 'none' ? 'flex' : 'none';
+  }
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

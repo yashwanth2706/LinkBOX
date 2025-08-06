@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import UrlEntry
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.views.decorators.http import require_POST
+from django.contrib import messages
 #from django.http import request
 
 # Create your views here.
@@ -39,3 +41,32 @@ def stored_urls_view(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, "stored_urls.html", {"page_obj": page_obj})
+
+from django.views.decorators.http import require_POST
+from django.shortcuts import redirect
+from django.contrib import messages
+from .models import UrlEntry
+
+@require_POST
+def add_url(request):
+    name = request.POST.get("name")
+    url = request.POST.get("url")
+    category = request.POST.get("category")
+    custom_category = request.POST.get("custom_category")
+    sub_category = request.POST.get("sub_category")
+    tags = request.POST.get("tags")
+
+    if url:
+        UrlEntry.objects.create(
+            name=name,
+            url=url,
+            category=category,
+            custom_category=custom_category,
+            sub_category=sub_category,
+            tags=tags
+        )
+        messages.success(request, "URL saved successfully.")
+    else:
+        messages.error(request, "URL is required.")
+
+    return redirect("index")

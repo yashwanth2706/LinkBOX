@@ -41,7 +41,7 @@
         class="btn btn-outline-dark btn-sm"
         data-bs-toggle="offcanvas"
         data-bs-target="#addUrls"
-        onclick = "toggleUrlsSection();"
+        onclick = "toggleUrlsSection()"
       >
         + Add URLs
       </button>
@@ -192,80 +192,52 @@
     </div>
 
     <!-- URL Input Card -->
-    <div class="card shadow" id="showUrlSection" style="display: none;">
-      <form>
-        <div class="mb-3">
-          <label for="url-textarea" class="form-label"
-            >Enter or paste your URL:</label
-          >
-          <textarea
-            class="form-control"
-            id="url-textarea"
-            rows="2"
-            placeholder="https://example.com"
-          ></textarea>
-        </div>
+<div class="card shadow" id="showUrlSection" style="display: none;">
+<form method="post" action="{% url 'add-url' %}" class="mb-4 border rounded p-3 shadow-sm">
+  {% csrf_token %}
 
-        <div class="mb-3">
-          <label for="name" class="form-label">Name (optional)</label>
-          <input
-            type="text"
-            class="form-control"
-            id="name"
-            placeholder="e.g. Google"
-          />
-        </div>
+  <div class="mb-3">
+    <label for="url-textarea" class="form-label">Enter or paste your URL:</label>
+    <textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com"></textarea>
+  </div>
 
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label for="category" class="form-label">Category</label>
-            <select class="form-select" id="category">
-              <option selected disabled>Choose category</option>
-              <option value="youtube">YouTube</option>
-              <option value="facebook">Facebook</option>
-              <option value="instagram">Instagram</option>
-              <option value="website">Website-Link</option>
-              <option value="others">Others</option>
-            </select>
-            <!-- Hidden Initially, shows up when Others option is selected -->
-            <div class="mt-2" id="custom-category-group" style="display: none">
-              <label for="custom-category" class="form-label"
-                >Custom Category Name</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="custom-category"
-                placeholder="e.g. MySpecialLinks"
-              />
-            </div>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label for="sub-category" class="form-label"
-              >Sub Category (optional)</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="sub-category"
-              placeholder="e.g. Free Illustrations"
-            />
-          </div>
-        </div>
+  <div class="mb-3">
+    <label for="name" class="form-label">Name (optional)</label>
+    <input type="text" class="form-control" id="name" name="name" placeholder="e.g. Google">
+  </div>
 
-        <div class="mb-3">
-          <label for="tags" class="form-label">Tags (comma separated)</label>
-          <input
-            type="text"
-            class="form-control"
-            id="tags"
-            placeholder="e.g. design, inspiration, vector"
-          />
-        </div>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label for="category" class="form-label">Category</label>
+      <select class="form-select" id="category" name="category">
+        <option selected disabled>Choose category</option>
+        <option value="youtube">YouTube</option>
+        <option value="facebook">Facebook</option>
+        <option value="instagram">Instagram</option>
+        <option value="website">Website-Link</option>
+        <option value="others">Others</option>
+      </select>
 
-        <button type="submit" class="btn btn-primary">Save URL</button>
-      </form>
+      <div class="mt-2" id="custom-category-group" style="display: none">
+        <label for="custom-category" class="form-label">Custom Category Name</label>
+        <input type="text" class="form-control" id="custom-category" name="custom_category" placeholder="e.g. MySpecialLinks">
+      </div>
     </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="sub-category" class="form-label">Sub Category (optional)</label>
+      <input type="text" class="form-control" id="sub-category" name="sub_category" placeholder="e.g. Free Illustrations">
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="tags" class="form-label">Tags (comma separated)</label>
+    <input type="text" class="form-control" id="tags" name="tags" placeholder="e.g. design, inspiration, vector">
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save URL</button>
+</form>
+</div>
 
     <!-- URL Table Card (Updated Features) -->
     <div class="card shadow mt-5">

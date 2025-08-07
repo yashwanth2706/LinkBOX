@@ -8,4 +8,6 @@ urlpatterns = [
     path('delete/<int:pk>/', views.delete_url, name='delete-url'),
     path('trash/', views.show_trash, name='show-trash'),
     path('trash-data/', views.trash_data, name='trash-data'),
+    path('trash-delete/', views.trash_delete, name='trash-delete'),
+    path('trash-recover/', views.trash_recover, name='trash-recover'),
 ]

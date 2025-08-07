@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.utils.timezone import now
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
+import json
 #from django.http import request
 
 # Create your views here.
@@ -94,3 +96,19 @@ def trash_data(request):
         "rows_html": rows_html,
         "pagination_html": pagination_html
     })
+@csrf_exempt
+def trash_delete(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        ids = data.get('ids', [])
+        UrlEntry.objects.filter(id__in=ids, is_deleted=True).delete()
+        return JsonResponse({'status': 'success'})
+
+@csrf_exempt
+def trash_recover(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        ids = data.get('ids', [])
+        UrlEntry.objects.filter(id__in=ids).update(is_deleted=False, deleted_at=None)
+        return JsonResponse({'status': 'success'})
+    

@@ -39,9 +39,8 @@
     <div class="d-flex justify-content-center gap-3 mt-4">
       <button
         class="btn btn-outline-dark btn-sm"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#addUrls"
-        onclick = "toggleUrlsSection()"
+        data-bs-toggle="modal"
+        data-bs-target="#addUrlModal"
       >
         + Add URLs
       </button>
@@ -192,51 +191,63 @@
     </div>
 
     <!-- URL Input Card -->
-<div class="card shadow" id="showUrlSection" style="display: none;">
-<form method="post" action="{% url 'add-url' %}" class="mb-4 border rounded p-3 shadow-sm">
-  {% csrf_token %}
-
-  <div class="mb-3">
-    <label for="url-textarea" class="form-label">Enter or paste your URL:</label>
-    <textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com"></textarea>
-  </div>
-
-  <div class="mb-3">
-    <label for="name" class="form-label">Name (optional)</label>
-    <input type="text" class="form-control" id="name" name="name" placeholder="e.g. Google">
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 mb-3">
-      <label for="category" class="form-label">Category</label>
-      <select class="form-select" id="category" name="category">
-        <option selected disabled>Choose category</option>
-        <option value="youtube">YouTube</option>
-        <option value="facebook">Facebook</option>
-        <option value="instagram">Instagram</option>
-        <option value="website">Website-Link</option>
-        <option value="others">Others</option>
-      </select>
-
-      <div class="mt-2" id="custom-category-group" style="display: none">
-        <label for="custom-category" class="form-label">Custom Category Name</label>
-        <input type="text" class="form-control" id="custom-category" name="custom_category" placeholder="e.g. MySpecialLinks">
+<div class="modal fade" id="addUrlModal" tabindex="-1" aria-labelledby="addUrlModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addUrlModalLabel">Add a New URL</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    </div>
 
-    <div class="col-md-6 mb-3">
-      <label for="sub-category" class="form-label">Sub Category (optional)</label>
-      <input type="text" class="form-control" id="sub-category" name="sub_category" placeholder="e.g. Free Illustrations">
+      <form method="post" action="{% url 'add-url' %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="url-textarea" class="form-label">Enter or paste your URL:</label>
+            <textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="name" class="form-label">Name (optional)</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="e.g. Google">
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="category" class="form-label">Category</label>
+              <select class="form-select" id="category" name="category">
+                <option selected disabled>Choose category</option>
+                <option value="youtube">YouTube</option>
+                <option value="facebook">Facebook</option>
+                <option value="instagram">Instagram</option>
+                <option value="website">Website-Link</option>
+                <option value="others">Others</option>
+              </select>
+
+              <div class="mt-2" id="custom-category-group" style="display: none">
+                <label for="custom-category" class="form-label">Custom Category Name</label>
+                <input type="text" class="form-control" id="custom-category" name="custom_category" placeholder="e.g. MySpecialLinks">
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="sub-category" class="form-label">Sub Category (optional)</label>
+              <input type="text" class="form-control" id="sub-category" name="sub_category" placeholder="e.g. Free Illustrations">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="tags" class="form-label">Tags (comma separated)</label>
+            <input type="text" class="form-control" id="tags" name="tags" placeholder="e.g. design, inspiration, vector">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save URL</button>
+        </div>
+      </form>
     </div>
   </div>
-
-  <div class="mb-3">
-    <label for="tags" class="form-label">Tags (comma separated)</label>
-    <input type="text" class="form-control" id="tags" name="tags" placeholder="e.g. design, inspiration, vector">
-  </div>
-
-  <button type="submit" class="btn btn-primary">Save URL</button>
-</form>
 </div>
 
     <!-- URL Table Card (Updated Features) -->
@@ -444,10 +455,15 @@
     </div>
 
     <script>
-      const categorySelect = document.getElementById("category");
-      const customCategoryGroup = document.getElementById(
-        "custom-category-group"
-      );
+    document.addEventListener('DOMContentLoaded', function () {
+    const categorySelect = document.getElementById("category");
+    const customCategoryGroup = document.getElementById("custom-category-group");
+
+    categorySelect.addEventListener("change", function () {
+      customCategoryGroup.style.display =
+        this.value === "others" ? "block" : "none";
+    });
+  });
 
       categorySelect.addEventListener("change", function () {
         customCategoryGroup.style.display =
@@ -503,10 +519,6 @@
   function toggleFilters() {
     const filterForm = document.getElementById('filterForm');
     filterForm.style.display = filterForm.style.display === 'none' ? 'flex' : 'none';
-  }
-  function toggleUrlsSection() {
-    const showUrlSection = document.getElementById('showUrlSection');
-    showUrlSection.style.display = showUrlSection.style.display === 'none' ? 'flex' : 'none';
   }
 
 </script>

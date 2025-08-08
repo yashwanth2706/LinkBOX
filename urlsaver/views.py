@@ -39,13 +39,42 @@ def visit_url(request, pk):
     return redirect(url_entry.url)
 
 def stored_urls_view(request):
-    url_list = UrlEntry.objects.filter(is_deleted=False).order_by('-created_at')
-    paginator = Paginator(url_list, 10)  # Show 10 URLs per page
+    tag = request.GET.get('tag', '').strip()
+    category = request.GET.get('category', '').strip()
+    sub_category = request.GET.get('sub_category', '').strip()
+    search_query = request.GET.get('search', '').strip()
 
+    # Base queryset
+    url_list = UrlEntry.objects.filter(is_deleted=False)
+
+    # Apply filters
+    if tag:
+        url_list = url_list.filter(tags__icontains=tag)
+    if category:
+        url_list = url_list.filter(category__icontains=category)
+    if sub_category:
+        url_list = url_list.filter(sub_category__icontains=sub_category)
+
+    # Apply search (across multiple fields)
+    if search_query:
+        url_list = url_list.filter(
+            Q(name__icontains=search_query) |
+            Q(url__icontains=search_query) |
+            Q(tags__icontains=search_query)
+        )
+
+    url_list = url_list.order_by('-created_at')
+    paginator = Paginator(url_list, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "stored_urls.html", {"page_obj": page_obj})
+    return render(request, "index.html", {
+        "page_obj": page_obj,
+        "search_query": search_query,
+        "tag": tag,
+        "category": category,
+        "sub_category": sub_category,
+    })
 
 @require_POST
 def add_url(request):
@@ -112,3 +141,41 @@ def trash_recover(request):
         UrlEntry.objects.filter(id__in=ids).update(is_deleted=False, deleted_at=None)
         return JsonResponse({'status': 'success'})
     
+def edit_url(request, pk):
+    url_entry = get_object_or_404(UrlEntry, pk=pk)
+
+    if request.method == 'POST':
+        url_entry.name = request.POST.get('name')
+        url_entry.url = request.POST.get('url')
+        url_entry.category = request.POST.get('category')
+        url_entry.sub_category = request.POST.get('sub_category')
+        url_entry.tags = request.POST.get('tags')
+        url_entry.save()
+        messages.success(request, "URL updated successfully.")
+        return redirect('stored-urls')  # or stored_urls_view if separate
+
+    return render(request, 'edit_url.html', {'url': url_entry})
+
+def get_url_details(request, url_id):
+    url = UrlEntry.objects.get(pk=url_id)
+    return JsonResponse({
+        "id": url.id,
+        "url": url.url,
+        "name": url.name,
+        "category": url.category,
+        "custom_category": url.custom_category,
+        "sub_category": url.sub_category,
+        "tags": url.tags,
+    })
+    
+@require_POST
+def edit_url_view(request, url_id):
+    url = get_object_or_404(UrlEntry, pk=url_id)
+    url.url = request.POST.get('url', '')
+    url.name = request.POST.get('name', '')
+    url.category = request.POST.get('category', '')
+    url.custom_category = request.POST.get('custom_category', '')
+    url.sub_category = request.POST.get('sub_category', '')
+    url.tags = request.POST.get('tags', '')
+    url.save()
+    return redirect('stored-urls')  # Update to match your view name

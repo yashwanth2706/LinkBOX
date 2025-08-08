@@ -190,18 +190,21 @@
       </div>
     </div>
 
-    <!-- URL Input Card -->
+<!-- URL Input Modal (Used for Add & Edit) -->
 <div class="modal fade" id="addUrlModal" tabindex="-1" aria-labelledby="addUrlModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content shadow">
       <div class="modal-header">
-        <h5 class="modal-title" id="addUrlModalLabel">Add a New URL</h5>
+        <h5 class="modal-title" id="addUrlModalLabel">Add a New URL</h5> <!-- ← Will change to "Edit URL" dynamically -->
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <form method="post" action="{% url 'add-url' %}">
+      <!-- We'll dynamically update `action` via JS -->
+      <form method="post" id="urlForm" action="{% url 'add-url' %}">
         {% csrf_token %}
         <div class="modal-body">
+          <input type="hidden" id="url-id" name="url_id" /> <!-- for editing -->
+
           <div class="mb-3">
             <label for="url-textarea" class="form-label">Enter or paste your URL:</label>
             <textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com"></textarea>
@@ -243,71 +246,79 @@
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save URL</button>
+          <button type="submit" class="btn btn-primary" id="submit-button">Save URL</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-    <!-- URL Table Card (Updated Features) -->
-    <div class="card shadow mt-5">
-      <div class="p-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="mb-0">Stored URLs</h5>
-          <div>
-            <!-- Filter Toggle Button -->
-        <button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleFilters()">
-            Filters
-        </button>
-            <button
-              class="btn btn-outline-secondary btn-sm"
-              onclick="showExportPopup()"
-            >
-              Export
-            </button>
-            <button
-              class="btn btn-outline-danger btn-sm"
-              onclick="showTrashPopup()"
-            >
-              Show Trash
-            </button>
-          </div>
-        </div>
-        <!-- Filter Form (initially hidden) -->
-        <form method="get" class="row g-2 mb-3" id="filterForm" style="display: none;">
-        <div class="col-md-3">
-            <input type="text" name="tag" class="form-control form-control-sm" placeholder="Filter by Tag" value="{{ request.GET.tag }}">
-        </div>
-        <div class="col-md-3">
-            <input type="text" name="category" class="form-control form-control-sm" placeholder="Filter by Category" value="{{ request.GET.category }}">
-        </div>
-        <div class="col-md-3">
-            <input type="text" name="sub_category" class="form-control form-control-sm" placeholder="Filter by Sub Category" value="{{ request.GET.sub_category }}">
-        </div>
-        <div class="col-md-3 d-flex">
-            <button type="submit" class="btn btn-sm btn-primary w-100">Apply Filters</button>
-        </div>
+<!-- URL Table Card (Updated Features) -->
+<div class="card shadow mt-5">
+  <div class="p-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">Stored URLs</h5>
+      <div class="d-flex gap-2 align-items-center">
+        <!-- Search Form -->
+        <form method="get" class="d-flex align-items-center me-2">
+          <input
+            type="text"
+            name="search"
+            class="form-control form-control-sm"
+            placeholder="Search URLs..."
+            value="{{ search_query }}"
+            style="max-width: 200px"
+          />
         </form>
-        <div class="table-responsive">
-          <table class="table table-bordered table-hover">
-            <thead class="table-light">
-              <tr>
-                <th><input type="checkbox" /></th>
-                <th>#</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Sub Category</th>
-                <th>Tags</th>
-                <th>Preview</th>
-                <th>Visit</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-            <tbody>
-              {% if page_obj %} 
-              {% for url in page_obj %}
+
+        <!-- Filter Toggle Button -->
+        <button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleFilters()">
+          Filters
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="showExportPopup()">
+          Export
+        </button>
+        <button class="btn btn-outline-danger btn-sm" onclick="showTrashPopup()">
+          Show Trash
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter Form (initially hidden) -->
+    <form method="get" class="row g-2 mb-3" id="filterForm" style="display: none;">
+      <div class="col-md-3">
+        <input type="text" name="tag" class="form-control form-control-sm" placeholder="Filter by Tag" value="{{ tag }}">
+      </div>
+      <div class="col-md-3">
+        <input type="text" name="category" class="form-control form-control-sm" placeholder="Filter by Category" value="{{ category }}">
+      </div>
+      <div class="col-md-3">
+        <input type="text" name="sub_category" class="form-control form-control-sm" placeholder="Filter by Sub Category" value="{{ sub_category }}">
+      </div>
+      <div class="col-md-3 d-flex">
+        <button type="submit" class="btn btn-sm btn-primary w-100">Apply Filters</button>
+      </div>
+    </form>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th><input type="checkbox" /></th>
+            <th>#</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Sub Category</th>
+            <th>Tags</th>
+            <th>Preview</th>
+            <th>Visit</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if page_obj %}
+            {% for url in page_obj %}
               <tr>
                 <td><input type="checkbox" /></td>
                 <td>{{ forloop.counter }}</td>
@@ -316,76 +327,80 @@
                 <td>{{ url.sub_category }}</td>
                 <td>{{ url.tags }}</td>
                 <td>
-                  <button class="btn btn-sm btn-outline-secondary">
-                    Preview
-                  </button>
+                  <button class="btn btn-sm btn-outline-secondary">Preview</button>
                 </td>
                 <td>
-                  <a
-                    href="{% url 'visit-url' url.id %}"
-                    class="btn btn-sm btn-primary"
-                    >Visit</a
-                  >
+                  <a target="_blank" rel="noopener noreferrer" href="{% url 'visit-url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
                 </td>
                 <td>
-            <form method="post" action="{% url 'delete-url' url.id %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-            </form>
-            </td>
+                    <button
+                        class="btn btn-sm btn-outline-primary"
+                        onclick="openEditModal({{ url.id }})"
+                    >
+                    Edit
+                    </button>
+                </td>
+                <td>
+                  <form method="post" action="{% url 'delete-url' url.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                  </form>
+                </td>
               </tr>
-              {% endfor %} 
-              {% else %}
-              <tr>
-                <td colspan="10" class="text-center">No URLs found.</td>
-              </tr>
-              {% endif %}
-            </tbody>
-            <nav aria-label="Page navigation">
-              <ul class="pagination pagination-sm justify-content-end">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                  <a
-                    class="page-link"
-                    href="?page={{ page_obj.previous_page_number }}"
-                    >Previous</a
-                  >
-                </li>
-                {% else %}
-                <li class="page-item disabled">
-                  <span class="page-link">Previous</span>
-                </li>
-                {% endif %} 
-                {% for num in page_obj.paginator.page_range %} 
-                {% if page_obj.number == num %}
-                <li class="page-item active">
-                  <span class="page-link">{{ num }}</span>
-                </li>
-                {% else %}
-                <li class="page-item">
-                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                </li>
-                {% endif %} 
-                {% endfor %} 
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                  <a
-                    class="page-link"
-                    href="?page={{ page_obj.next_page_number }}"
-                    >Next</a
-                  >
-                </li>
-                {% else %}
-                <li class="page-item disabled">
-                  <span class="page-link">Next</span>
-                </li>
-                {% endif %}
-              </ul>
-            </nav>
-          </table>
-        </div>
-      </div>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="10" class="text-center">No URLs found.</td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
     </div>
+
+    <!-- Pagination -->
+<nav aria-label="Page navigation">
+  <ul class="pagination pagination-sm justify-content-end">
+    {# Previous button #}
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link"
+           href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+          Previous
+        </a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+    {% endif %}
+
+    {# Page numbers #}
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link"
+             href="?page={{ num }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+            {{ num }}
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {# Next button #}
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link"
+           href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+          Next
+        </a>
+      </li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Next</span></li>
+    {% endif %}
+  </ul>
+</nav>
+  </div>
+</div>
 
     <!-- Export Popup Modal -->
     <div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">
@@ -465,10 +480,10 @@
     });
   });
 
-      categorySelect.addEventListener("change", function () {
-        customCategoryGroup.style.display =
-          this.value === "others" ? "block" : "none";
-      });
+    //  categorySelect.addEventListener("change", function () {
+    //    customCategoryGroup.style.display =
+    //      this.value === "others" ? "block" : "none";
+    //  });
 
       function showExportPopup() {
         const modal = new bootstrap.Modal(
@@ -623,6 +638,37 @@ function getCSRFToken() {
   return document.querySelector('[name=csrfmiddlewaretoken]').value;
 }
 
+</script>
+<script>
+  function openEditModal(urlId) {
+    fetch(`/get-url-details/${urlId}/`)
+      .then(response => response.json())
+      .then(data => {
+        // Update modal fields
+        document.getElementById('addUrlModalLabel').textContent = 'Edit URL';
+        document.getElementById('urlForm').action = `/edit-url/${urlId}/`;
+        document.getElementById('url-id').value = data.id;
+        document.getElementById('url-textarea').value = data.url;
+        document.getElementById('name').value = data.name;
+        document.getElementById('category').value = data.category;
+        document.getElementById('sub-category').value = data.sub_category;
+        document.getElementById('tags').value = data.tags;
+
+        if (data.category === 'others') {
+          document.getElementById('custom-category-group').style.display = 'block';
+          document.getElementById('custom-category').value = data.custom_category || '';
+        } else {
+          document.getElementById('custom-category-group').style.display = 'none';
+          document.getElementById('custom-category').value = '';
+        }
+
+        document.getElementById('submit-button').textContent = 'Update URL';
+
+        // Show the modal
+        var myModal = new bootstrap.Modal(document.getElementById('addUrlModal'));
+        myModal.show();
+      });
+  }
 </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
   </body>

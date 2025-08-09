@@ -313,7 +313,7 @@
             <th>Preview</th>
             <th>Visit</th>
             <th>Edit</th>
-            <th>Delete</th>
+            <th>Remove</th>
           </tr>
         </thead>
         <tbody>
@@ -343,7 +343,7 @@
                 <td>
                   <form method="post" action="{% url 'delete-url' url.id %}" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    <button title="Move to Trash (Permanently deleted after 30days)" type="submit" class="btn btn-sm btn-danger">Remove</button>
                   </form>
                 </td>
               </tr>
@@ -469,6 +469,7 @@
       </div>
     </div>
 
+    <!-- Script tags for Web Actions -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
     const categorySelect = document.getElementById("category");
@@ -480,10 +481,7 @@
     });
   });
 
-    //  categorySelect.addEventListener("change", function () {
-    //    customCategoryGroup.style.display =
-    //      this.value === "others" ? "block" : "none";
-    //  });
+  
 
       function showExportPopup() {
         const modal = new bootstrap.Modal(

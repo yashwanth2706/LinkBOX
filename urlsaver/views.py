@@ -26,7 +26,7 @@ def indexPage(request):
     if sub_category:
         urls = urls.filter(sub_category__iexact=sub_category)
 
-    paginator = Paginator(urls.order_by('-created_at'), 10)
+    paginator = Paginator(urls.order_by('-created_at'), 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -64,7 +64,7 @@ def stored_urls_view(request):
         )
 
     url_list = url_list.order_by('-created_at')
-    paginator = Paginator(url_list, 10)
+    paginator = Paginator(url_list, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 

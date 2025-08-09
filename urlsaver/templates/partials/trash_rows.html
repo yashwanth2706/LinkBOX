@@ -1,7 +1,7 @@
 {% for url in page_obj %}
 <tr>
   <td><input type="checkbox" class="trash-checkbox" value="{{ url.id }}"/></td>
-  <td>{{ forloop.counter }}</td>
+  <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
   <td>{{ url.name }}</td>
   <td>{{ url.url }}</td>
   <td>{{ url.category }}</td>

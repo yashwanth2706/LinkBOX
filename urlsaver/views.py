@@ -180,3 +180,11 @@ def edit_url_view(request, url_id):
     url.tags = request.POST.get('tags', '')
     url.save()
     return redirect('stored-urls')  # Update to match your view name
+
+@require_POST
+def delete_selected(request):
+    ids = request.POST.getlist('selected_urls')
+    if ids:
+        # Move to trash instead of hard delete
+        UrlEntry.objects.filter(id__in=ids).update(is_deleted=True)
+    return redirect('index')

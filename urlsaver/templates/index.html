@@ -302,6 +302,8 @@
       </div>
     </form>
 
+<form id="bulkDeleteForm" method="post" action="{% url 'delete-selected' %}">
+  {% csrf_token %}
     <div class="table-responsive">
       <table class="table table-bordered table-hover">
         <thead class="table-light">
@@ -315,7 +317,6 @@
             <th>Preview</th>
             <th>Visit</th>
             <th>Edit</th>
-            <th>Remove</th>
           </tr>
         </thead>
         <tbody>
@@ -342,12 +343,6 @@
                     Edit
                     </button>
                 </td>
-                <td>
-                  <form method="post" action="{% url 'delete-url' url.id %}" style="display: inline;">
-                    {% csrf_token %}
-                    <button title="Move to Trash (Permanently deleted after 30days)" type="submit" class="btn btn-sm btn-danger">Remove</button>
-                  </form>
-                </td>
               </tr>
             {% endfor %}
           {% else %}
@@ -358,14 +353,14 @@
         </tbody>
       </table>
     </div>
+</form>
 
     <!-- Pagination -->
         <div class="d-flex justify-content-between align-items-center">
     <!-- Left: Remove button -->
-            <button type="submit" class="btn btn-sm btn-danger"
-            onclick="removeSelected()">
-                Remove Selected
-            </button>
+    <button type="button" class="btn btn-sm btn-danger" onclick="removeSelected()">
+    Remove Selected
+    </button>
     <nav aria-label="Page navigation">
     <ul class="pagination pagination-sm justify-content-end">
         {# Previous button #}
@@ -522,6 +517,25 @@
 
 
     </script>
+    <script>
+function removeSelected() {
+    // Used JS submit to check the edge case if no row is checked then alert the user or else 
+    // If confirmed submit via javascript, Django handels post from indide the form
+    let checkboxes = document.querySelectorAll('.row-checkbox:checked');
+    if (checkboxes.length === 0) {
+        alert("Please select at least one URL to remove.");
+        return;
+    }
+    if (confirm("Are you sure you want to move the selected URLs to trash?")) {
+        document.getElementById('bulkDeleteForm').submit();
+    }
+}
+
+// Select/Deselect All
+document.getElementById('selectAll').addEventListener('change', function() {
+    document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = this.checked);
+});
+</script>
     <script>
       function addLinkInput() {
         const wrapper = document.createElement("div");

@@ -266,10 +266,11 @@
             type="text"
             name="search"
             class="form-control form-control-sm"
-            placeholder="Search URLs..."
+            placeholder="Search URLs by Name..."
             value="{{ search_query }}"
             style="max-width: 200px"
           />
+          <button type="submit" class="btn btn-sm btn-primary ms-1">Search</button>
         </form>
 
         <!-- Filter Toggle Button -->
@@ -430,7 +431,8 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Recycle Bin</h5>
+            <h5 class="modal-title" style="margin:10px;">Recycle Bin</h5>
+            <h6 style="font-size: 12px; color:blue">*Contents are deleted permanently after 30days from the time of removal</h6>
             <button
               type="button"
               class="btn-close"
@@ -459,10 +461,17 @@
             </nav>
             <div class="d-flex justify-content-between">
               <button class="btn btn-outline-success" onclick="recoverSelected()">Retrieve Selected</button>
+                <button
+                title = "Deletes Everything Permanently from Trash"
+                class="btn btn-outline-danger"
+                onclick="deleteAll()">
+                Empty Trash
+              </button>
               <button
+                title = "Deletes only selected item(s)"
                 class="btn btn-outline-danger"
                 onclick="deleteSelected()">
-                Delete Permanently
+                Delete Selected
               </button>
             </div>
           </div>
@@ -616,6 +625,56 @@ function deleteSelected() {
     }
   });
 }
+
+// Delete All Function
+
+function deleteAll() {
+    // Get all trash item IDs (not just selected ones)
+    function getAllTrashIds() {
+        return Array.from(document.querySelectorAll('.trash-checkbox'))
+            .map(cb => cb.value);
+    }
+    
+    const allIds = getAllTrashIds();
+
+    if (!allIds.length) {
+        alert('No items to delete.');
+        return;
+    }
+
+    // Confirmation dialog
+    if (!confirm(`Are you sure you want to delete all ${allIds.length} items? This action cannot be undone.`)) {
+        return;
+    }
+
+    fetch('/trash-delete/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify({ ids: allIds })
+    }).then(res => {
+        if (res.ok) {
+            const modalEl = document.getElementById('trashModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) {
+                modal.hide();
+
+                modalEl.addEventListener('hidden.bs.modal', function handler() {
+                    modalEl.removeEventListener('hidden.bs.modal', handler);
+                    showTrashPopup(); // Refresh modal contents after close
+                });
+            }
+        } else {
+            alert('Failed to delete items. Please try again.');
+        }
+    }).catch(error => {
+        console.error('Error deleting items:', error);
+        alert('An error occurred while deleting items.');
+    });
+}
+
 
 function recoverSelected() {
   const selectedIds = Array.from(document.querySelectorAll('.trash-checkbox:checked'))

@@ -58,7 +58,7 @@ def stored_urls_view(request):
     # Apply search (across multiple fields)
     if search_query:
         url_list = url_list.filter(
-            Q(name__icontains=search_query) |
+            Q(name__istartswith=search_query) |
             Q(url__icontains=search_query) |
             Q(tags__icontains=search_query)
         )

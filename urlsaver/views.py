@@ -125,6 +125,7 @@ def trash_data(request):
         "rows_html": rows_html,
         "pagination_html": pagination_html
     })
+    
 @csrf_exempt
 def trash_delete(request):
     if request.method == 'POST':

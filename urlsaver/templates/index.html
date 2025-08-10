@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,6 +10,7 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <div id="css-check" class="d-none"></div>
     <style>
       body {
         font-family: "Courier New", Courier, monospace;
@@ -27,6 +29,66 @@
         resize: none;
       }
     </style>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // --- CSS FALLBACK ---
+        const cssCheck = document.getElementById('css-check');
+
+        if (window.getComputedStyle(cssCheck).display !== 'none') {
+            console.warn('Bootstrap CSS from CDN failed. Loading local fallback...');
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = "{% static 'bootstrap-5.3.7-dist/css/bootstrap.min.css' %}";
+
+            link.onload = function() {
+                console.log('✅ Local Bootstrap CSS has been loaded.');
+            };
+            link.onerror = function() {
+                console.error('Failed to load local Bootstrap CSS.');
+            };
+
+            document.head.appendChild(link);
+        } else {
+            console.log('✅ Bootstrap CSS from CDN loaded successfully.');
+        }
+
+        // --- JAVASCRIPT FALLBACK ---
+        function initializeBootstrapComponents() {
+            // Initialize your Bootstrap modal here, after Bootstrap is confirmed to be loaded
+            if (typeof bootstrap !== 'undefined') {
+                const trashModalEl = document.getElementById('trashModal');
+                if (trashModalEl) {
+                    window.trashModal = new bootstrap.Modal(trashModalEl);
+                    console.log('✅ Bootstrap Modal initialized successfully.');
+                }
+            } else {
+                console.error('Bootstrap is still not available after fallback attempt.');
+            }
+        }
+
+        if (typeof bootstrap === 'undefined') {
+            console.warn('Bootstrap JS from CDN failed. Loading local fallback...');
+            const script = document.createElement('script');
+            script.src = "{% static 'bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js' %}";
+
+            script.onload = function() {
+                console.log('✅ Local Bootstrap JS has been loaded.');
+                // Initialize Bootstrap components AFTER the local script loads
+                initializeBootstrapComponents();
+            };
+            
+            script.onerror = function() {
+                console.error('Failed to load local Bootstrap JS.');
+            };
+
+            document.body.appendChild(script);
+        } else {
+            console.log('✅ Bootstrap JS from CDN loaded successfully.');
+            // Initialize Bootstrap components immediately if CDN loaded
+            initializeBootstrapComponents();
+        }
+    });
+    </script>
   </head>
   <body>
     <!-- Navbar -->
@@ -578,17 +640,24 @@ const trashModalEl = document.getElementById('trashModal');
 const trashModal = new bootstrap.Modal(trashModalEl);
 
 // 2. This function OPENS the modal and loads the first page of data.
+// Updated function to show trash popup
 function showTrashPopup() {
+    // Check if trashModal is available before using it
+    if (typeof window.trashModal === 'undefined') {
+        console.error('Bootstrap Modal is not initialized yet.');
+        return;
+    }
+
     // Fetch data for the first page
     fetch(`/trash-data/?page=1`)
-        .then(response => response.json()) // Use .json() as your view returns JsonResponse
+        .then(response => response.json())
         .then(data => {
             // Update the modal's content
             document.getElementById('trashTableBody').innerHTML = data.rows_html;
             document.getElementById('trashPagination').innerHTML = data.pagination_html;
             
-            // Show the PRE-INITIALIZED modal
-            trashModal.show();
+            // Show the modal
+            window.trashModal.show();
         })
         .catch(error => console.error('Error opening trash modal:', error));
 }

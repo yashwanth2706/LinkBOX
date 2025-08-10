@@ -330,18 +330,16 @@
                 <td>{{ url.sub_category }}</td>
                 <td>{{ url.tags }}</td>
                 <td>
-                  <button class="btn btn-sm btn-outline-secondary">Preview</button>
+                  <button class="btn btn-sm btn-outline-secondary" onclick="alert('feature not implemented');">Preview</button>
                 </td>
                 <td>
                   <a target="_blank" rel="noopener noreferrer" href="{% url 'visit-url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
                 </td>
                 <td>
-                    <button
-                        class="btn btn-sm btn-outline-primary"
-                        onclick="openEditModal({{ url.id }})"
-                    >
-                    Edit
-                    </button>
+                <button type="button" class="btn btn-outline-dark btn-sm"
+                onclick="openEditModal('{{ url.id }}', '{{ url.name|escapejs }}', '{{ url.url|escapejs }}', '{{ url.category }}', '{{ url.custom_category|escapejs }}', '{{ url.sub_category|escapejs }}', '{{ url.tags|escapejs }}')">
+                Edit
+                </button>
                 </td>
               </tr>
             {% endfor %}

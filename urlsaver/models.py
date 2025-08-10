@@ -8,7 +8,7 @@ from datetime import timedelta
 class UrlEntry(models.Model):
     name = models.CharField(max_length=255, blank=True)
     url = models.URLField()
-    category = models.CharField(max_length=100)
+    category = models.CharField(max_length=100, null=True, blank=True)
     custom_category = models.CharField(max_length=100, blank=True)
     sub_category = models.CharField(max_length=100, blank=True)
     tags = models.CharField(max_length=255, blank=True)

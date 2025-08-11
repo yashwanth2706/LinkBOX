@@ -1,957 +1,957 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LinkBOX</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-    <div id="css-check" class="d-none"></div>
-    <style>
-      body {
-        font-family: "Courier New", Courier, monospace;
-        background-color: #f8f9fa;
-      }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>LinkBOX</title>
+		<link
+				href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+				rel="stylesheet"
+				/>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+		<div id="css-check" class="d-none"></div>
+		<style>
+body {
+	font-family: "Courier New", Courier, monospace;
+	background-color: #f8f9fa;
+}
       .navbar {
-        background-color: #d1d5dc !important;
-        height: 60px;
+	      background-color: #d1d5dc !important;
+	      height: 60px;
       }
       .card {
-        max-width: 800px;
-        margin: 50px auto;
-        padding: 20px;
+	      max-width: 800px;
+	      margin: 50px auto;
+	      padding: 20px;
       }
       textarea {
-        resize: none;
+	      resize: none;
       }
-    </style>
-    <!-- Local bootstrap loaded debug script START -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // --- CSS FALLBACK ---
-        const cssCheck = document.getElementById('css-check');
+		</style>
+		<!-- Local bootstrap loaded debug script START -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				// --- CSS FALLBACK ---
+				const cssCheck = document.getElementById('css-check');
 
-        if (window.getComputedStyle(cssCheck).display !== 'none') {
-            console.warn('Bootstrap CSS from CDN failed. Loading local fallback...');
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = "{% static 'bootstrap-5.3.7-dist/css/bootstrap.min.css' %}";
+				if (window.getComputedStyle(cssCheck).display !== 'none') {
+					console.warn('Bootstrap CSS from CDN failed. Loading local fallback...');
+					const link = document.createElement('link');
+					link.rel = 'stylesheet';
+					link.href = "{% static 'bootstrap-5.3.7-dist/css/bootstrap.min.css' %}";
 
-            link.onload = function() {
-                console.log('✅ Local Bootstrap CSS has been loaded.');
-            };
-            link.onerror = function() {
-                console.error('Failed to load local Bootstrap CSS.');
-            };
+					link.onload = function() {
+						console.log('✅ Local Bootstrap CSS has been loaded.');
+					};
+					link.onerror = function() {
+						console.error('Failed to load local Bootstrap CSS.');
+					};
 
-            document.head.appendChild(link);
-        } else {
-            console.log('✅ Bootstrap CSS from CDN loaded successfully.');
-        }
+					document.head.appendChild(link);
+				} else {
+					console.log('✅ Bootstrap CSS from CDN loaded successfully.');
+				}
 
-        // --- JAVASCRIPT FALLBACK ---
-        function initializeBootstrapComponents() {
-            // Initialize your Bootstrap modal here, after Bootstrap is confirmed to be loaded
-            if (typeof bootstrap !== 'undefined') {
-                const trashModalEl = document.getElementById('trashModal');
-                if (trashModalEl) {
-                    window.trashModal = new bootstrap.Modal(trashModalEl);
-                    console.log('✅ Bootstrap Modal initialized successfully.');
-                }
-            } else {
-                console.error('Bootstrap is still not available after fallback attempt.');
-            }
-        }
+				// --- JAVASCRIPT FALLBACK ---
+				function initializeBootstrapComponents() {
+					// Initialize your Bootstrap modal here, after Bootstrap is confirmed to be loaded
+					if (typeof bootstrap !== 'undefined') {
+						const trashModalEl = document.getElementById('trashModal');
+						if (trashModalEl) {
+							window.trashModal = new bootstrap.Modal(trashModalEl);
+							console.log('✅ Bootstrap Modal initialized successfully.');
+						}
+					} else {
+						console.error('Bootstrap is still not available after fallback attempt.');
+					}
+				}
 
-        if (typeof bootstrap === 'undefined') {
-            console.warn('Bootstrap JS from CDN failed. Loading local fallback...');
-            const script = document.createElement('script');
-            script.src = "{% static 'bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js' %}";
+				if (typeof bootstrap === 'undefined') {
+					console.warn('Bootstrap JS from CDN failed. Loading local fallback...');
+					const script = document.createElement('script');
+					script.src = "{% static 'bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js' %}";
 
-            script.onload = function() {
-                console.log('✅ Local Bootstrap JS has been loaded.');
-                // Initialize Bootstrap components AFTER the local script loads
-                initializeBootstrapComponents();
-            };
-            
-            script.onerror = function() {
-                console.error('Failed to load local Bootstrap JS.');
-            };
+					script.onload = function() {
+						console.log('✅ Local Bootstrap JS has been loaded.');
+						// Initialize Bootstrap components AFTER the local script loads
+						initializeBootstrapComponents();
+					};
 
-            document.body.appendChild(script);
-        } else {
-            console.log('✅ Bootstrap JS from CDN loaded successfully.');
-            // Initialize Bootstrap components immediately if CDN loaded
-            initializeBootstrapComponents();
-        }
-    });
-    </script>
-    <!-- Local bootstrap loaded debug script END -->
-  </head>
-  <body>
+					script.onerror = function() {
+						console.error('Failed to load local Bootstrap JS.');
+					};
 
-    <!-- <nav>bar START -->
-    <nav class="navbar">
-      <div class="container">
-        <h4 class="m-0"><strong>LinkBOX</strong></h4>
-        <div id="popup-container" style="font-family: 'Courier New', Courier, monospace;"></div>
-      </div>
+					document.body.appendChild(script);
+				} else {
+					console.log('✅ Bootstrap JS from CDN loaded successfully.');
+					// Initialize Bootstrap components immediately if CDN loaded
+					initializeBootstrapComponents();
+				}
+			});
+		</script>
+		<!-- Local bootstrap loaded debug script END -->
+	</head>
+	<body>
 
-<!-- Check server alive style START -->
-<style>
+		<!-- <nav>bar START -->
+		<nav class="navbar">
+			<div class="container">
+				<h4 class="m-0"><strong>LinkBOX</strong></h4>
+				<div id="popup-container" style="font-family: 'Courier New', Courier, monospace;"></div>
+			</div>
+
+			<!-- Check server alive style START -->
+			<style>
 #popup-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 9999;
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	z-index: 9999;
 }
 .server-popup {
-    background: #fff;
-    border-left: 5px solid grey;
-    padding: 15px 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    font-size: 14px;
-    color: #333;
-    min-width: 220px;
-    transform: translateX(120%);
-    transition: transform 0.4s ease-in-out;
+	background: #fff;
+	border-left: 5px solid grey;
+	padding: 15px 20px;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+	font-size: 14px;
+	color: #333;
+	min-width: 220px;
+	transform: translateX(120%);
+	transition: transform 0.4s ease-in-out;
 }
 .server-popup.show {
-    transform: translateX(0);
+	transform: translateX(0);
 }
-</style>
-<!-- Check server alive style END -->
-
-    <!-- Check server alive script START -->
-<script>
-/*
-
-*/
-let serverAlive = true;
-
-function showPopup(message, color = "grey", autoHide = false, hideOnTime = 3000, id = null) {
-    let popupContainer = document.getElementById("popup-container");
-
-if (id) {
-  const existing = popupContainer.querySelector(`[data-id="${id}"]`);
-  if (existing) {
-    // update text & color instead of creating a duplicate
-    existing.textContent = message;
-    existing.style.borderLeftColor = color;
-
-    // reset hide timer if autoHide requested
-    if (autoHide) {
-      clearTimeout(existing._hideTimer);
-      existing._hideTimer = setTimeout(() => {
-        existing.classList.remove("show");
-        setTimeout(() => existing.remove(), 400);
-      }, hideOnTime);
-    }
-    return; // exit because we've updated the existing popup
-  }
-}
-
-    // Create the popup
-    let popup = document.createElement("div");
-    if (id) popup.setAttribute("data-id", id); // store unique identifier
-    popup.classList.add("server-popup", "show");
-    popup.style.borderLeftColor = color;
-    popup.textContent = message;
-
-    popupContainer.appendChild(popup);
-
-    // Handle auto-hide if requested
-    if (autoHide) {
-        setTimeout(() => {
-            popup.classList.remove("show");
-            setTimeout(() => popup.remove(), 400); // wait for animation
-        }, hideOnTime);
-    }
-}
-
-function checkServerAlive() {
-    fetch(window.location.origin, { method: 'HEAD', cache: 'no-store' })
-        .then(res => {
-            if (!res.ok) throw new Error();
-            if (!serverAlive) { 
-                showPopup(
-                    "✅ Django server is running! Features available",
-                    "green",
-                    true,
-                    3000,
-                    "server-status"
-                );
-            }
-            serverAlive = true;
-        })
-        .catch(() => {
-            if (serverAlive) { 
-                showPopup(
-                    "⚠ Django server has been stopped! Features unavailable",
-                    "red",
-                    false,
-                    0,
-                    "server-status"
-                );
-            }
-            serverAlive = false;
-        });
-}
-
-checkServerAlive();
-setInterval(checkServerAlive, 5000);
-</script>
-<!-- Check server alive script END -->
-</nav>
-<!-- <nav>bar END -->
-
-    <!-- Action Buttons -->
-    <div class="d-flex justify-content-center gap-3 mt-4">
-      <button
-        class="btn btn-outline-dark btn-sm"
-        data-bs-toggle="modal"
-        data-bs-target="#addUrlModal"
-      >
-        + Add URLs
-      </button>
-      <button
-        class="btn btn-outline-dark btn-sm"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#activityPanel"
-      >
-        Activity
-      </button>
-      <button
-        class="btn btn-outline-primary btn-sm"
-        data-bs-toggle="modal"
-        data-bs-target="#urlGroupsModal"
-      >
-        URL Groups
-      </button>
-      <button
-        class="btn btn-outline-dark btn-sm"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#urlGroupsPanel"
-      >
-        Show URL Groups
-      </button>
-    </div>
-
-    <!-- Activity Offcanvas -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="activityPanel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title">Activity</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="offcanvas"
-        ></button>
-      </div>
-      <div class="offcanvas-body">
-        <p>
-          <strong>Number of URLs stored:</strong> <span id="url-count">--</span>
-        </p>
-        <hr />
-        <h6>Top 10 Most Visited URLs:</h6>
-        <ul id="top-visited-list" class="list-group list-group-flush">
-          <!-- Example item -->
-          <!-- <li class="list-group-item d-flex justify-content-between align-items-center">
-        https://example.com
-        <span class="badge bg-primary rounded-pill">23</span>
-      </li> -->
-        </ul>
-      </div>
-    </div>
-
-    <!-- URL Groups Modal -->
-    <div class="modal fade" id="urlGroupsModal" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <form id="url-group-form">
-            <div class="modal-header">
-              <h5 class="modal-title">Add URL Group</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <div class="mb-3">
-                <label for="group-name" class="form-label">Group Name *</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="group-name"
-                  required
-                />
-              </div>
-              <!-- Minimum of 2 links are considered as Group -->
-              <div id="linkInputs_0">
-                <label class="form-label">Links *</label>
-                <input
-                  type="url"
-                  class="form-control mb-2"
-                  placeholder="https://..."
-                  required
-                />
-              </div>
-              <div id="linkInputs">
-                <label class="form-label">Links *</label>
-                <input
-                  type="url"
-                  class="form-control mb-2"
-                  placeholder="https://..."
-                  required
-                />
-              </div>
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-sm mt-2"
-                onclick="addLinkInput()"
-              >
-                + Add Link
-              </button>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-success">
-                Add as Group
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- URL Groups Side Panel -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="urlGroupsPanel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title">Saved URL Groups</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="offcanvas"
-        ></button>
-      </div>
-      <div class="offcanvas-body">
-        <table class="table table-bordered table-hover">
-          <thead class="table-light">
-            <tr>
-              <th>#</th>
-              <th>Group Name</th>
-              <th># of URLs</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="group-list-body">
-            <!-- Example row -->
-            <!-- <tr>
-          <td>1</td>
-          <td>Design Tutorial</td>
-          <td>5</td>
-          <td>
-            <button class="btn btn-sm btn-outline-primary">Edit</button>
-            <button class="btn btn-sm btn-outline-success">Launch</button>
-            <button class="btn btn-sm btn-outline-danger">Delete</button>
-          </td>
-        </tr> -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-<!-- URL Input Modal (Used for Add & Edit) -->
-<div class="modal fade" id="addUrlModal" tabindex="-1" aria-labelledby="addUrlModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content shadow">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addUrlModalLabel">Add a New URL</h5> <!-- ← Will change to "Edit URL" dynamically -->
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <!-- We'll dynamically update `action` via JS -->
-      <form method="post" id="urlForm" action="{% url 'add-url' %}">
-        {% csrf_token %}
-        <div class="modal-body">
-          <input type="hidden" id="url-id" name="url_id" /> <!-- for editing -->
-
-          <div class="mb-3">
-            <label for="url-textarea" class="form-label">Enter or paste your URL:</label>
-            <textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com"></textarea>
-          </div>
-
-          <div class="mb-3">
-            <label for="name" class="form-label">Name (optional)</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="e.g. Google">
-          </div>
-
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="category" class="form-label">Category</label>
-              <select class="form-select" id="category" name="category">
-                <option selected disabled>Choose category</option>
-                <option value="youtube">YouTube</option>
-                <option value="facebook">Facebook</option>
-                <option value="instagram">Instagram</option>
-                <option value="website">Website-Link</option>
-                <option value="others">Others</option>
-              </select>
-
-              <div class="mt-2" id="custom-category-group" style="display: none">
-                <label for="custom-category" class="form-label">Custom Category Name</label>
-                <input type="text" class="form-control" id="custom-category" name="custom_category" placeholder="e.g. MySpecialLinks">
-              </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label for="sub-category" class="form-label">Sub Category (optional)</label>
-              <input type="text" class="form-control" id="sub-category" name="sub_category" placeholder="e.g. Free Illustrations">
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="tags" class="form-label">Tags (comma separated)</label>
-            <input type="text" class="form-control" id="tags" name="tags" placeholder="e.g. design, inspiration, vector">
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" id="submit-button">Save URL</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- URL Table Card (Updated Features) -->
-<div class="card shadow mt-5">
-  <div class="p-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Stored URLs</h5>
-      <div class="d-flex gap-2 align-items-center">
-        <!-- Search Form -->
-        <form method="get" class="d-flex align-items-center me-2">
-          <input
-            type="text"
-            name="search"
-            class="form-control form-control-sm"
-            placeholder="Search URLs by Name..."
-            value="{{ search_query }}"
-            style="max-width: 200px"
-          />
-          <button type="submit" class="btn btn-sm btn-primary ms-1">Search</button>
-        </form>
-
-        <!-- Filter Toggle Button -->
-        <button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleFilters()">
-          Filters
-        </button>
-        <button class="btn btn-outline-secondary btn-sm" onclick="showExportPopup()">
-          Export
-        </button>
-        <button class="btn btn-outline-danger btn-sm" onclick="showTrashPopup()">
-          Show Trash
-        </button>
-      </div>
-    </div>
-
-    <!-- Filter Form (initially hidden) -->
-    <form method="get" class="row g-2 mb-3" id="filterForm" style="display: none;">
-      <div class="col-md-3">
-        <input type="text" name="tag" class="form-control form-control-sm" placeholder="Filter by Tag" value="{{ tag }}">
-      </div>
-      <div class="col-md-3">
-        <input type="text" name="category" class="form-control form-control-sm" placeholder="Filter by Category" value="{{ category }}">
-      </div>
-      <div class="col-md-3">
-        <input type="text" name="sub_category" class="form-control form-control-sm" placeholder="Filter by Sub Category" value="{{ sub_category }}">
-      </div>
-      <div class="col-md-3 d-flex">
-        <button type="submit" class="btn btn-sm btn-primary w-100">Apply Filters</button>
-      </div>
-    </form>
-
-<form id="bulkDeleteForm" method="post" action="{% url 'delete-selected' %}">
-  {% csrf_token %}
-    <div class="table-responsive">
-      <table class="table table-bordered table-hover">
-        <thead class="table-light">
-          <tr>
-            <th title="Select All"><input id="selectAll" type="checkbox"></th>
-            <th>#</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Sub Category</th>
-            <th>Tags</th>
-            <th>Preview</th>
-            <th>Visit</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% if page_obj %}
-            {% for url in page_obj %}
-              <tr>
-                <td><input type="checkbox" class="row-checkbox" name="selected_urls" value="{{ url.id }}"></td>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ url.name }}</td>
-                <td>{{ url.effective_category }}</td>
-                <td>{{ url.sub_category }}</td>
-                <td>{{ url.tags }}</td>
-                <td>
-                  <button class="btn btn-sm btn-outline-secondary" onclick="alert('feature not implemented');">Preview</button>
-                </td>
-                <td>
-                  <a target="_blank" rel="noopener noreferrer" href="{% url 'visit-url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
-                </td>
-                <td>
-                <button type="button" class="btn btn-outline-dark btn-sm"
-                onclick="openEditModal('{{ url.id }}', '{{ url.name|escapejs }}', '{{ url.url|escapejs }}', '{{ url.category }}', '{{ url.custom_category|escapejs }}', '{{ url.sub_category|escapejs }}', '{{ url.tags|escapejs }}')">
-                Edit
-                </button>
-                </td>
-              </tr>
-            {% endfor %}
-          {% else %}
-            <tr>
-              <td colspan="10" class="text-center">No URLs found.</td>
-            </tr>
-          {% endif %}
-        </tbody>
-      </table>
-    </div>
-</form>
-
-    <!-- Pagination -->
-        <div class="d-flex justify-content-between align-items-center">
-    <!-- Left: Remove button -->
-    <button type="button" class="btn btn-sm btn-danger" onclick="removeSelected()">
-    Remove Selected
-    </button>
-    <nav aria-label="Page navigation">
-    <ul class="pagination pagination-sm justify-content-end">
-        {# Previous button #}
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link"
-            href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
-            Previous
-            </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled"><span class="page-link">Previous</span></li>
-        {% endif %}
-
-        {# Page numbers #}
-        {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-        {% else %}
-            <li class="page-item">
-            <a class="page-link"
-                href="?page={{ num }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
-                {{ num }}
-            </a>
-            </li>
-        {% endif %}
-        {% endfor %}
-
-        {# Next button #}
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link"
-            href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
-            Next
-            </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled"><span class="page-link">Next</span></li>
-        {% endif %}
-        </ul>
-        </nav>
-    </div>
-  </div>
-</div>
-
-    <!-- Export Popup Modal -->
-    <div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Export Options</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <button class="btn btn-outline-primary w-100 mb-2">
-              Export as PDF
-            </button>
-            <button class="btn btn-outline-success w-100">Export as CSV</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Trash Popup Modal -->
-    <div class="modal fade" id="trashModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" style="margin:10px;">Recycle Bin</h5>
-            <h6 style="font-size: 12px; color:blue">*Contents are deleted permanently after 30days from the time of removal</h6>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <table class="table table-bordered table-hover">
-              <thead class="table-light">
-                <tr>
-                  <th><input type="checkbox" id="selectAllTrash"/></th>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>URL</th>
-                  <th>Category</th>
-                  <th>Deleted On</th>
-                </tr>
-              </thead>
-              <tbody  id="trashTableBody">
-                <!-- Trash rows here -->
-
-              </tbody>
-            </table>
-            <nav>
-                <ul class="pagination pagination-sm justify-content-end" id="trashPagination"></ul>
-            </nav>
-            <div class="d-flex justify-content-between">
-              <button class="btn btn-outline-success" onclick="recoverSelected()">Retrieve Selected</button>
-                <button
-                title = "Deletes Everything Permanently from Trash"
-                class="btn btn-outline-danger"
-                onclick="deleteAll()">
-                Empty Trash
-              </button>
-              <button
-                title = "Deletes only selected item(s)"
-                class="btn btn-outline-danger"
-                onclick="deleteSelected()">
-                Delete Selected
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Script tags for Web Actions -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const categorySelect = document.getElementById("category");
-    const customCategoryGroup = document.getElementById("custom-category-group");
-
-    categorySelect.addEventListener("change", function () {
-      customCategoryGroup.style.display =
-        this.value === "others" ? "block" : "none";
-    });
-
-    const selectAll = document.getElementById('selectAll');
-    selectAll.addEventListener('change', function () {
-        const isChecked = this.checked;
-        document.querySelectorAll('tbody .row-checkbox').forEach(cb => {
-            cb.checked = isChecked;
-        });
-    });
-  }); 
-
-      function showExportPopup() {
-        const modal = new bootstrap.Modal(
-          document.getElementById("exportModal")
-        );
-        modal.show();
-      }
-
-      function showTrashPopup() {
-        const modal = new bootstrap.Modal(
-          document.getElementById("trashModal")
-        );
-        modal.show();
-      }
-
-
-    </script>
-    <script>
-function removeSelected() {
-    // Used JS submit to check the edge case if no row is checked then alert the user or else 
-    // If confirmed submit via javascript, Django handels post from indide the form
-    let checkboxes = document.querySelectorAll('.row-checkbox:checked');
-    if (checkboxes.length === 0) {
-        showPopup("No URL has been selected", 'yellow' ,true, 2000, 'checkbox-status');
-        //alert("Please select at least one URL to remove.");
-        return;
-    }
-    if (confirm("Are you sure you want to move the selected URLs to trash?")) {
-        document.getElementById('bulkDeleteForm').submit();
-    }
-}
-
-// Select/Deselect All
-document.getElementById('selectAll').addEventListener('change', function() {
-    document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = this.checked);
-});
-</script>
-    <script>
-      function addLinkInput() {
-        const wrapper = document.createElement("div");
-        wrapper.className = "d-flex align-items-center mb-2";
-
-        const input = document.createElement("input");
-        input.type = "url";
-        input.className = "form-control me-2";
-        input.placeholder = "https://...";
-        input.required = true;
-
-        const removeBtn = document.createElement("button");
-        removeBtn.type = "button";
-        removeBtn.className = "btn btn-outline-danger btn-sm";
-        removeBtn.innerText = "-";
-        removeBtn.onclick = () => wrapper.remove();
-
-        wrapper.appendChild(input);
-        wrapper.appendChild(removeBtn);
-
-        document.getElementById("linkInputs").appendChild(wrapper);
-      }
-
-      // Example: You can later populate top visited list and group list dynamically
-      // document.getElementById("url-count").innerText = "123";
-      // document.getElementById("top-visited-list").innerHTML = "...";
-      // document.getElementById("group-list-body").innerHTML = "...";
-    </script>
-<!-- Script to toggle filter visibility -->
-<script>
-  function toggleFilters() {
-    const filterForm = document.getElementById('filterForm');
-    filterForm.style.display = filterForm.style.display === 'none' ? 'flex' : 'none';
-  }
-
-</script>
-
-<script>
-
-// 1. Get the modal element and create the Bootstrap modal instance ONCE.
-const trashModalEl = document.getElementById('trashModal');
-const trashModal = new bootstrap.Modal(trashModalEl);
-
-// 2. This function OPENS the modal and loads the first page of data.
-// Updated function to show trash popup
-function showTrashPopup() {
-    // Check if trashModal is available before using it
-    if (typeof window.trashModal === 'undefined') {
-        console.error('Bootstrap Modal is not initialized yet.');
-        return;
-    }
-
-    // Fetch data for the first page
-    fetch(`/trash-data/?page=1`)
-        .then(response => response.json())
-        .then(data => {
-            // Update the modal's content
-            document.getElementById('trashTableBody').innerHTML = data.rows_html;
-            document.getElementById('trashPagination').innerHTML = data.pagination_html;
-            
-            // Show the modal
-            window.trashModal.show();
-        })
-        .catch(error => console.error('Error opening trash modal:', error));
-}
-
-// 3. This function is ONLY for pagination. It just updates content inside the ALREADY OPEN modal.
-function loadTrashPage(page) {
-    fetch(`/trash-data/?page=${page}`)
-        .then(response => response.json())
-        .then(data => {
-            // Just update the content.
-            document.getElementById('trashTableBody').innerHTML = data.rows_html;
-            document.getElementById('trashPagination').innerHTML = data.pagination_html;
-        })
-        .catch(error => console.error('Error loading trash page:', error));
-}
-
-</script>
-<script>
-    document.addEventListener('change', function (e) {
-  if (e.target.id === 'selectAllTrash') {
-    const checked = e.target.checked;
-    document.querySelectorAll('.trash-checkbox').forEach(cb => {
-      cb.checked = checked;
-    });
-  }
-});
-
-function deleteSelected() {
-    function getSelectedTrashIds() {
-    return Array.from(document.querySelectorAll('.trash-checkbox:checked'))
-        .map(cb => cb.value);
-    }
-  const selectedIds = getSelectedTrashIds();
-
-  if (!selectedIds.length) {
-    alert('Please select at least one item.');
-    return;
-  }
-
-  fetch('/trash-delete/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': getCSRFToken()
-    },
-    body: JSON.stringify({ ids: selectedIds })
-  }).then(res => {
-    if (res.ok) {
-      const modalEl = document.getElementById('trashModal');
-      const modal = bootstrap.Modal.getInstance(modalEl);
-      if (modal) {
-        modal.hide();
-
-        modalEl.addEventListener('hidden.bs.modal', function handler() {
-          modalEl.removeEventListener('hidden.bs.modal', handler);
-          showTrashPopup(); //Refresh modal contents after close
-        });
-      }
-    }
-  });
-}
-
-// Delete All Function
-
-function deleteAll() {
-    // Get all trash item IDs (not just selected ones)
-    function getAllTrashIds() {
-        return Array.from(document.querySelectorAll('.trash-checkbox'))
-            .map(cb => cb.value);
-    }
-    
-    const allIds = getAllTrashIds();
-
-    if (!allIds.length) {
-        alert('No items to delete.');
-        return;
-    }
-
-    // Confirmation dialog
-    if (!confirm(`Are you sure you want to delete all ${allIds.length} items? This action cannot be undone.`)) {
-        return;
-    }
-
-    fetch('/trash-delete/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCSRFToken()
-        },
-        body: JSON.stringify({ ids: allIds })
-    }).then(res => {
-        if (res.ok) {
-            const modalEl = document.getElementById('trashModal');
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            if (modal) {
-                modal.hide();
-
-                modalEl.addEventListener('hidden.bs.modal', function handler() {
-                    modalEl.removeEventListener('hidden.bs.modal', handler);
-                    showTrashPopup(); // Refresh modal contents after close
-                });
-            }
-        } else {
-            alert('Failed to delete items. Please try again.');
-        }
-    }).catch(error => {
-        console.error('Error deleting items:', error);
-        alert('An error occurred while deleting items.');
-    });
-}
-
-
-function recoverSelected() {
-  const selectedIds = Array.from(document.querySelectorAll('.trash-checkbox:checked'))
-    .map(cb => cb.value);
-
-  if (!selectedIds.length) {
-    alert('Please select at least one item.');
-    return;
-  }
-
-  fetch('/trash-recover/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': getCSRFToken()
-    },
-    body: JSON.stringify({ ids: selectedIds })
-  }).then(res => {
-    if (res.ok) {
-      const modalEl = document.getElementById('trashModal');
-      const modal = bootstrap.Modal.getInstance(modalEl);
-      if (modal) {
-        modal.hide();
-
-        modalEl.addEventListener('hidden.bs.modal', function handler() {
-          modalEl.removeEventListener('hidden.bs.modal', handler);
-          location.reload();  //Reload the page to see recovered items
-        });
-      }
-    }
-  });
-}
-
-function getCSRFToken() {
-  return document.querySelector('[name=csrfmiddlewaretoken]').value;
-}
-
-</script>
-<script>
-  function openEditModal(urlId) {
-    fetch(`/get-url-details/${urlId}/`)
-      .then(response => response.json())
-      .then(data => {
-        // Update modal fields
-        document.getElementById('addUrlModalLabel').textContent = 'Edit URL';
-        document.getElementById('urlForm').action = `/edit-url/${urlId}/`;
-        document.getElementById('url-id').value = data.id;
-        document.getElementById('url-textarea').value = data.url;
-        document.getElementById('name').value = data.name;
-        document.getElementById('category').value = data.category;
-        document.getElementById('sub-category').value = data.sub_category;
-        document.getElementById('tags').value = data.tags;
-
-        if (data.category === 'others') {
-          document.getElementById('custom-category-group').style.display = 'block';
-          document.getElementById('custom-category').value = data.custom_category || '';
-        } else {
-          document.getElementById('custom-category-group').style.display = 'none';
-          document.getElementById('custom-category').value = '';
-        }
-
-        document.getElementById('submit-button').textContent = 'Update URL';
-
-        // Show the modal
-        var myModal = new bootstrap.Modal(document.getElementById('addUrlModal'));
-        myModal.show();
-      });
-  }
-</script>
-  </body>
+			</style>
+			<!-- Check server alive style END -->
+
+			<!-- Check server alive script START -->
+			<script>
+				/*
+
+				*/
+				let serverAlive = true;
+
+				function showPopup(message, color = "grey", autoHide = false, hideOnTime = 3000, id = null) {
+					let popupContainer = document.getElementById("popup-container");
+
+					if (id) {
+						const existing = popupContainer.querySelector(`[data-id="${id}"]`);
+						if (existing) {
+							// update text & color instead of creating a duplicate
+							existing.textContent = message;
+							existing.style.borderLeftColor = color;
+
+							// reset hide timer if autoHide requested
+							if (autoHide) {
+								clearTimeout(existing._hideTimer);
+								existing._hideTimer = setTimeout(() => {
+									existing.classList.remove("show");
+									setTimeout(() => existing.remove(), 400);
+								}, hideOnTime);
+							}
+							return; // exit because we've updated the existing popup
+						}
+					}
+
+					// Create the popup
+					let popup = document.createElement("div");
+					if (id) popup.setAttribute("data-id", id); // store unique identifier
+					popup.classList.add("server-popup", "show");
+					popup.style.borderLeftColor = color;
+					popup.textContent = message;
+
+					popupContainer.appendChild(popup);
+
+					// Handle auto-hide if requested
+					if (autoHide) {
+						setTimeout(() => {
+							popup.classList.remove("show");
+							setTimeout(() => popup.remove(), 400); // wait for animation
+						}, hideOnTime);
+					}
+				}
+
+				function checkServerAlive() {
+					fetch(window.location.origin, { method: 'HEAD', cache: 'no-store' })
+						.then(res => {
+							if (!res.ok) throw new Error();
+							if (!serverAlive) { 
+								showPopup(
+									"✅ Django server is running! Features available",
+									"green",
+									true,
+									3000,
+									"server-status"
+								);
+							}
+							serverAlive = true;
+						})
+						.catch(() => {
+							if (serverAlive) { 
+								showPopup(
+									"⚠ Django server has been stopped! Features unavailable",
+									"red",
+									false,
+									0,
+									"server-status"
+								);
+							}
+							serverAlive = false;
+						});
+				}
+
+				checkServerAlive();
+				setInterval(checkServerAlive, 5000);
+			</script>
+			<!-- Check server alive script END -->
+		</nav>
+		<!-- <nav>bar END -->
+
+		<!-- Action Buttons -->
+		<div class="d-flex justify-content-center gap-3 mt-4">
+			<button
+					class="btn btn-outline-dark btn-sm"
+					data-bs-toggle="modal"
+					data-bs-target="#addUrlModal"
+					>
+					+ Add URLs
+			</button>
+				<button
+						class="btn btn-outline-dark btn-sm"
+						data-bs-toggle="offcanvas"
+						data-bs-target="#activityPanel"
+						>
+						Activity
+				</button>
+					<button
+							class="btn btn-outline-primary btn-sm"
+							data-bs-toggle="modal"
+							data-bs-target="#urlGroupsModal"
+							>
+							URL Groups
+					</button>
+						<button
+								class="btn btn-outline-dark btn-sm"
+								data-bs-toggle="offcanvas"
+								data-bs-target="#urlGroupsPanel"
+								>
+								Show URL Groups
+						</button>
+		</div>
+
+		<!-- Activity Offcanvas -->
+		<div class="offcanvas offcanvas-end" tabindex="-1" id="activityPanel">
+			<div class="offcanvas-header">
+				<h5 class="offcanvas-title">Activity</h5>
+				<button
+						type="button"
+						class="btn-close"
+						data-bs-dismiss="offcanvas"
+						></button>
+			</div>
+			<div class="offcanvas-body">
+				<p>
+				<strong>Number of URLs stored:</strong> <span id="url-count">--</span>
+				</p>
+				<hr />
+				<h6>Top 10 Most Visited URLs:</h6>
+				<ul id="top-visited-list" class="list-group list-group-flush">
+					<!-- Example item -->
+					<!-- <li class="list-group-item d-flex justify-content-between align-items-center">
+						https://example.com
+						<span class="badge bg-primary rounded-pill">23</span>
+						</li> -->
+				</ul>
+			</div>
+		</div>
+
+		<!-- URL Groups Modal -->
+		<div class="modal fade" id="urlGroupsModal" tabindex="-1">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<form id="url-group-form">
+						<div class="modal-header">
+							<h5 class="modal-title">Add URL Group</h5>
+							<button
+									type="button"
+									class="btn-close"
+									data-bs-dismiss="modal"
+									></button>
+						</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<label for="group-name" class="form-label">Group Name *</label>
+								<input
+										type="text"
+										class="form-control"
+										id="group-name"
+										required
+										/>
+							</div>
+							<!-- Minimum of 2 links are considered as Group -->
+							<div id="linkInputs_0">
+								<label class="form-label">Links *</label>
+								<input
+										type="url"
+										class="form-control mb-2"
+										placeholder="https://..."
+										required
+										/>
+							</div>
+							<div id="linkInputs">
+								<label class="form-label">Links *</label>
+								<input
+										type="url"
+										class="form-control mb-2"
+										placeholder="https://..."
+										required
+										/>
+							</div>
+							<button
+									type="button"
+									class="btn btn-outline-secondary btn-sm mt-2"
+									onclick="addLinkInput()"
+									>
+									+ Add Link
+							</button>
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-success">
+								Add as Group
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- URL Groups Side Panel -->
+		<div class="offcanvas offcanvas-end" tabindex="-1" id="urlGroupsPanel">
+			<div class="offcanvas-header">
+				<h5 class="offcanvas-title">Saved URL Groups</h5>
+				<button
+						type="button"
+						class="btn-close"
+						data-bs-dismiss="offcanvas"
+						></button>
+			</div>
+			<div class="offcanvas-body">
+				<table class="table table-bordered table-hover">
+					<thead class="table-light">
+						<tr>
+							<th>#</th>
+							<th>Group Name</th>
+							<th># of URLs</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="group-list-body">
+						<!-- Example row -->
+						<!-- <tr>
+							<td>1</td>
+							<td>Design Tutorial</td>
+							<td>5</td>
+							<td>
+							<button class="btn btn-sm btn-outline-primary">Edit</button>
+							<button class="btn btn-sm btn-outline-success">Launch</button>
+							<button class="btn btn-sm btn-outline-danger">Delete</button>
+							</td>
+							</tr> -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- URL Input Modal (Used for Add & Edit) -->
+		<div class="modal fade" id="addUrlModal" tabindex="-1" aria-labelledby="addUrlModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content shadow">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addUrlModalLabel">Add a New URL</h5> <!-- ← Will change to "Edit URL" dynamically -->
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+
+					<!-- We'll dynamically update `action` via JS -->
+					<form method="post" id="urlForm" action="{% url 'add-url' %}">
+						{% csrf_token %}
+						<div class="modal-body">
+							<input type="hidden" id="url-id" name="url_id" /> <!-- for editing -->
+
+							<div class="mb-3">
+								<label for="url-textarea" class="form-label">Enter or paste your URL:</label>
+								<textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com"></textarea>
+							</div>
+
+							<div class="mb-3">
+								<label for="name" class="form-label">Name (optional)</label>
+								<input type="text" class="form-control" id="name" name="name" placeholder="e.g. Google">
+							</div>
+
+							<div class="row">
+								<div class="col-md-6 mb-3">
+									<label for="category" class="form-label">Category</label>
+									<select class="form-select" id="category" name="category">
+										<option selected disabled>Choose category</option>
+										<option value="youtube">YouTube</option>
+										<option value="facebook">Facebook</option>
+										<option value="instagram">Instagram</option>
+										<option value="website">Website-Link</option>
+										<option value="others">Others</option>
+									</select>
+
+									<div class="mt-2" id="custom-category-group" style="display: none">
+										<label for="custom-category" class="form-label">Custom Category Name</label>
+										<input type="text" class="form-control" id="custom-category" name="custom_category" placeholder="e.g. MySpecialLinks">
+									</div>
+								</div>
+
+								<div class="col-md-6 mb-3">
+									<label for="sub-category" class="form-label">Sub Category (optional)</label>
+									<input type="text" class="form-control" id="sub-category" name="sub_category" placeholder="e.g. Free Illustrations">
+								</div>
+							</div>
+
+							<div class="mb-3">
+								<label for="tags" class="form-label">Tags (comma separated)</label>
+								<input type="text" class="form-control" id="tags" name="tags" placeholder="e.g. design, inspiration, vector">
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary" id="submit-button">Save URL</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- URL Table Card (Updated Features) -->
+		<div class="card shadow mt-5">
+			<div class="p-3">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h5 class="mb-0">Stored URLs</h5>
+					<div class="d-flex gap-2 align-items-center">
+						<!-- Search Form -->
+						<form method="get" class="d-flex align-items-center me-2">
+							<input
+									type="text"
+									name="search"
+									class="form-control form-control-sm"
+									placeholder="Search URLs by Name..."
+									value="{{ search_query }}"
+									style="max-width: 200px"
+									/>
+							<button type="submit" class="btn btn-sm btn-primary ms-1">Search</button>
+						</form>
+
+						<!-- Filter Toggle Button -->
+						<button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleFilters()">
+							Filters
+						</button>
+						<button class="btn btn-outline-secondary btn-sm" onclick="showExportPopup()">
+							Export
+						</button>
+						<button class="btn btn-outline-danger btn-sm" onclick="showTrashPopup()">
+							Show Trash
+						</button>
+					</div>
+				</div>
+
+				<!-- Filter Form (initially hidden) -->
+				<form method="get" class="row g-2 mb-3" id="filterForm" style="display: none;">
+					<div class="col-md-3">
+						<input type="text" name="tag" class="form-control form-control-sm" placeholder="Filter by Tag" value="{{ tag }}">
+					</div>
+					<div class="col-md-3">
+						<input type="text" name="category" class="form-control form-control-sm" placeholder="Filter by Category" value="{{ category }}">
+					</div>
+					<div class="col-md-3">
+						<input type="text" name="sub_category" class="form-control form-control-sm" placeholder="Filter by Sub Category" value="{{ sub_category }}">
+					</div>
+					<div class="col-md-3 d-flex">
+						<button type="submit" class="btn btn-sm btn-primary w-100">Apply Filters</button>
+					</div>
+				</form>
+
+				<form id="bulkDeleteForm" method="post" action="{% url 'delete-selected' %}">
+					{% csrf_token %}
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover">
+							<thead class="table-light">
+								<tr>
+									<th title="Select All"><input id="selectAll" type="checkbox"></th>
+									<th>#</th>
+									<th>Name</th>
+									<th>Category</th>
+									<th>Sub Category</th>
+									<th>Tags</th>
+									<th>Preview</th>
+									<th>Visit</th>
+									<th>Edit</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% if page_obj %}
+								{% for url in page_obj %}
+								<tr>
+									<td><input type="checkbox" class="row-checkbox" name="selected_urls" value="{{ url.id }}"></td>
+									<td>{{ forloop.counter }}</td>
+									<td>{{ url.name }}</td>
+									<td>{{ url.effective_category }}</td>
+									<td>{{ url.sub_category }}</td>
+									<td>{{ url.tags }}</td>
+									<td>
+										<button class="btn btn-sm btn-outline-secondary" onclick="alert('feature not implemented');">Preview</button>
+									</td>
+									<td>
+										<a target="_blank" rel="noopener noreferrer" href="{% url 'visit-url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
+									</td>
+									<td>
+										<button type="button" class="btn btn-outline-dark btn-sm"
+												      onclick="openEditModal('{{ url.id }}', '{{ url.name|escapejs }}', '{{ url.url|escapejs }}', '{{ url.category }}', '{{ url.custom_category|escapejs }}', '{{ url.sub_category|escapejs }}', '{{ url.tags|escapejs }}')">
+											Edit
+										</button>
+									</td>
+								</tr>
+								{% endfor %}
+								{% else %}
+								<tr>
+									<td colspan="10" class="text-center">No URLs found.</td>
+								</tr>
+								{% endif %}
+							</tbody>
+						</table>
+					</div>
+				</form>
+
+				<!-- Pagination -->
+				<div class="d-flex justify-content-between align-items-center">
+					<!-- Left: Remove button -->
+					<button type="button" class="btn btn-sm btn-danger" onclick="removeSelected()">
+						Remove Selected
+					</button>
+					<nav aria-label="Page navigation">
+						<ul class="pagination pagination-sm justify-content-end">
+							{# Previous button #}
+							{% if page_obj.has_previous %}
+							<li class="page-item">
+								<a class="page-link"
+								   href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+									Previous
+								</a>
+							</li>
+							{% else %}
+							<li class="page-item disabled"><span class="page-link">Previous</span></li>
+							{% endif %}
+
+							{# Page numbers #}
+							{% for num in page_obj.paginator.page_range %}
+							{% if page_obj.number == num %}
+							<li class="page-item active"><span class="page-link">{{ num }}</span></li>
+							{% else %}
+							<li class="page-item">
+								<a class="page-link"
+								   href="?page={{ num }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+									{{ num }}
+								</a>
+							</li>
+							{% endif %}
+							{% endfor %}
+
+							{# Next button #}
+							{% if page_obj.has_next %}
+							<li class="page-item">
+								<a class="page-link"
+								   href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+									Next
+								</a>
+							</li>
+							{% else %}
+							<li class="page-item disabled"><span class="page-link">Next</span></li>
+							{% endif %}
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+
+		<!-- Export Popup Modal -->
+		<div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Export Options</h5>
+						<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								></button>
+					</div>
+					<div class="modal-body">
+						<button class="btn btn-outline-primary w-100 mb-2">
+							Export as PDF
+						</button>
+						<button class="btn btn-outline-success w-100">Export as CSV</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Trash Popup Modal -->
+		<div class="modal fade" id="trashModal" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" style="margin:10px;">Recycle Bin</h5>
+						<h6 style="font-size: 12px; color:blue">*Contents are deleted permanently after 30days from the time of removal</h6>
+						<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								></button>
+					</div>
+					<div class="modal-body">
+						<table class="table table-bordered table-hover">
+							<thead class="table-light">
+								<tr>
+									<th><input type="checkbox" id="selectAllTrash"/></th>
+									<th>#</th>
+									<th>Name</th>
+									<th>URL</th>
+									<th>Category</th>
+									<th>Deleted On</th>
+								</tr>
+							</thead>
+							<tbody  id="trashTableBody">
+								<!-- Trash rows here -->
+
+							</tbody>
+						</table>
+						<nav>
+							<ul class="pagination pagination-sm justify-content-end" id="trashPagination"></ul>
+						</nav>
+						<div class="d-flex justify-content-between">
+							<button class="btn btn-outline-success" onclick="recoverSelected()">Retrieve Selected</button>
+							<button
+									title = "Deletes Everything Permanently from Trash"
+									class="btn btn-outline-danger"
+									onclick="deleteAll()">
+								Empty Trash
+							</button>
+							<button
+									title = "Deletes only selected item(s)"
+									class="btn btn-outline-danger"
+									onclick="deleteSelected()">
+								Delete Selected
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Script tags for Web Actions -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const categorySelect = document.getElementById("category");
+				const customCategoryGroup = document.getElementById("custom-category-group");
+
+				categorySelect.addEventListener("change", function () {
+					customCategoryGroup.style.display =
+						this.value === "others" ? "block" : "none";
+				});
+
+				const selectAll = document.getElementById('selectAll');
+				selectAll.addEventListener('change', function () {
+					const isChecked = this.checked;
+					document.querySelectorAll('tbody .row-checkbox').forEach(cb => {
+						cb.checked = isChecked;
+					});
+				});
+			}); 
+
+			function showExportPopup() {
+				const modal = new bootstrap.Modal(
+					document.getElementById("exportModal")
+				);
+				modal.show();
+			}
+
+			function showTrashPopup() {
+				const modal = new bootstrap.Modal(
+					document.getElementById("trashModal")
+				);
+				modal.show();
+			}
+
+
+		</script>
+		<script>
+			function removeSelected() {
+				// Used JS submit to check the edge case if no row is checked then alert the user or else 
+				// If confirmed submit via javascript, Django handels post from indide the form
+				let checkboxes = document.querySelectorAll('.row-checkbox:checked');
+				if (checkboxes.length === 0) {
+					showPopup("No URL has been selected", 'yellow' ,true, 2000, 'checkbox-status');
+					//alert("Please select at least one URL to remove.");
+					return;
+				}
+				if (confirm("Are you sure you want to move the selected URLs to trash?")) {
+					document.getElementById('bulkDeleteForm').submit();
+				}
+			}
+
+			// Select/Deselect All
+			document.getElementById('selectAll').addEventListener('change', function() {
+				document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = this.checked);
+			});
+		</script>
+		<script>
+			function addLinkInput() {
+				const wrapper = document.createElement("div");
+				wrapper.className = "d-flex align-items-center mb-2";
+
+				const input = document.createElement("input");
+				input.type = "url";
+				input.className = "form-control me-2";
+				input.placeholder = "https://...";
+				input.required = true;
+
+				const removeBtn = document.createElement("button");
+				removeBtn.type = "button";
+				removeBtn.className = "btn btn-outline-danger btn-sm";
+				removeBtn.innerText = "-";
+				removeBtn.onclick = () => wrapper.remove();
+
+				wrapper.appendChild(input);
+				wrapper.appendChild(removeBtn);
+
+				document.getElementById("linkInputs").appendChild(wrapper);
+			}
+
+			// Example: You can later populate top visited list and group list dynamically
+			// document.getElementById("url-count").innerText = "123";
+			// document.getElementById("top-visited-list").innerHTML = "...";
+			// document.getElementById("group-list-body").innerHTML = "...";
+		</script>
+		<!-- Script to toggle filter visibility -->
+		<script>
+			function toggleFilters() {
+				const filterForm = document.getElementById('filterForm');
+				filterForm.style.display = filterForm.style.display === 'none' ? 'flex' : 'none';
+			}
+
+		</script>
+
+		<script>
+
+			// 1. Get the modal element and create the Bootstrap modal instance ONCE.
+			const trashModalEl = document.getElementById('trashModal');
+			const trashModal = new bootstrap.Modal(trashModalEl);
+
+			// 2. This function OPENS the modal and loads the first page of data.
+			// Updated function to show trash popup
+			function showTrashPopup() {
+				// Check if trashModal is available before using it
+				if (typeof window.trashModal === 'undefined') {
+					console.error('Bootstrap Modal is not initialized yet.');
+					return;
+				}
+
+				// Fetch data for the first page
+				fetch(`/trash-data/?page=1`)
+					.then(response => response.json())
+					.then(data => {
+						// Update the modal's content
+						document.getElementById('trashTableBody').innerHTML = data.rows_html;
+						document.getElementById('trashPagination').innerHTML = data.pagination_html;
+
+						// Show the modal
+						window.trashModal.show();
+					})
+					.catch(error => console.error('Error opening trash modal:', error));
+			}
+
+			// 3. This function is ONLY for pagination. It just updates content inside the ALREADY OPEN modal.
+			function loadTrashPage(page) {
+				fetch(`/trash-data/?page=${page}`)
+					.then(response => response.json())
+					.then(data => {
+						// Just update the content.
+						document.getElementById('trashTableBody').innerHTML = data.rows_html;
+						document.getElementById('trashPagination').innerHTML = data.pagination_html;
+					})
+					.catch(error => console.error('Error loading trash page:', error));
+			}
+
+		</script>
+		<script>
+			document.addEventListener('change', function (e) {
+				if (e.target.id === 'selectAllTrash') {
+					const checked = e.target.checked;
+					document.querySelectorAll('.trash-checkbox').forEach(cb => {
+						cb.checked = checked;
+					});
+				}
+			});
+
+			function deleteSelected() {
+				function getSelectedTrashIds() {
+					return Array.from(document.querySelectorAll('.trash-checkbox:checked'))
+						.map(cb => cb.value);
+				}
+				const selectedIds = getSelectedTrashIds();
+
+				if (!selectedIds.length) {
+					alert('Please select at least one item.');
+					return;
+				}
+
+				fetch('/trash-delete/', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': getCSRFToken()
+					},
+					body: JSON.stringify({ ids: selectedIds })
+				}).then(res => {
+					if (res.ok) {
+						const modalEl = document.getElementById('trashModal');
+						const modal = bootstrap.Modal.getInstance(modalEl);
+						if (modal) {
+							modal.hide();
+
+							modalEl.addEventListener('hidden.bs.modal', function handler() {
+								modalEl.removeEventListener('hidden.bs.modal', handler);
+								showTrashPopup(); //Refresh modal contents after close
+							});
+						}
+					}
+				});
+			}
+
+			// Delete All Function
+
+			function deleteAll() {
+				// Get all trash item IDs (not just selected ones)
+				function getAllTrashIds() {
+					return Array.from(document.querySelectorAll('.trash-checkbox'))
+						.map(cb => cb.value);
+				}
+
+				const allIds = getAllTrashIds();
+
+				if (!allIds.length) {
+					alert('No items to delete.');
+					return;
+				}
+
+				// Confirmation dialog
+				if (!confirm(`Are you sure you want to delete all ${allIds.length} items? This action cannot be undone.`)) {
+					return;
+				}
+
+				fetch('/trash-delete/', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': getCSRFToken()
+					},
+					body: JSON.stringify({ ids: allIds })
+				}).then(res => {
+					if (res.ok) {
+						const modalEl = document.getElementById('trashModal');
+						const modal = bootstrap.Modal.getInstance(modalEl);
+						if (modal) {
+							modal.hide();
+
+							modalEl.addEventListener('hidden.bs.modal', function handler() {
+								modalEl.removeEventListener('hidden.bs.modal', handler);
+								showTrashPopup(); // Refresh modal contents after close
+							});
+						}
+					} else {
+						alert('Failed to delete items. Please try again.');
+					}
+				}).catch(error => {
+					console.error('Error deleting items:', error);
+					alert('An error occurred while deleting items.');
+				});
+			}
+
+
+			function recoverSelected() {
+				const selectedIds = Array.from(document.querySelectorAll('.trash-checkbox:checked'))
+					.map(cb => cb.value);
+
+				if (!selectedIds.length) {
+					alert('Please select at least one item.');
+					return;
+				}
+
+				fetch('/trash-recover/', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-CSRFToken': getCSRFToken()
+					},
+					body: JSON.stringify({ ids: selectedIds })
+				}).then(res => {
+					if (res.ok) {
+						const modalEl = document.getElementById('trashModal');
+						const modal = bootstrap.Modal.getInstance(modalEl);
+						if (modal) {
+							modal.hide();
+
+							modalEl.addEventListener('hidden.bs.modal', function handler() {
+								modalEl.removeEventListener('hidden.bs.modal', handler);
+								location.reload();  //Reload the page to see recovered items
+							});
+						}
+					}
+				});
+			}
+
+			function getCSRFToken() {
+				return document.querySelector('[name=csrfmiddlewaretoken]').value;
+			}
+
+		</script>
+		<script>
+			function openEditModal(urlId) {
+				fetch(`/get-url-details/${urlId}/`)
+					.then(response => response.json())
+					.then(data => {
+						// Update modal fields
+						document.getElementById('addUrlModalLabel').textContent = 'Edit URL';
+						document.getElementById('urlForm').action = `/edit-url/${urlId}/`;
+						document.getElementById('url-id').value = data.id;
+						document.getElementById('url-textarea').value = data.url;
+						document.getElementById('name').value = data.name;
+						document.getElementById('category').value = data.category;
+						document.getElementById('sub-category').value = data.sub_category;
+						document.getElementById('tags').value = data.tags;
+
+						if (data.category === 'others') {
+							document.getElementById('custom-category-group').style.display = 'block';
+							document.getElementById('custom-category').value = data.custom_category || '';
+						} else {
+							document.getElementById('custom-category-group').style.display = 'none';
+							document.getElementById('custom-category').value = '';
+						}
+
+						document.getElementById('submit-button').textContent = 'Update URL';
+
+						// Show the modal
+						var myModal = new bootstrap.Modal(document.getElementById('addUrlModal'));
+						myModal.show();
+					});
+			}
+		</script>
+	</body>
 </html>

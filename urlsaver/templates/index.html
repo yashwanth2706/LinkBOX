@@ -93,56 +93,69 @@
     <!-- Local bootstrap loaded debug script END -->
   </head>
   <body>
-    <!-- Navbar -->
+
+    <!-- <nav>bar START -->
     <nav class="navbar">
       <div class="container">
         <h4 class="m-0"><strong>LinkBOX</strong></h4>
-        <div id="server-popup" class="server-popup" style="font-family: 'Courier New', Courier, monospace;"></div>
+        <div id="popup-container" style="font-family: 'Courier New', Courier, monospace;"></div>
       </div>
 
 <!-- Check server alive style START -->
 <style>
-.server-popup {
+#popup-container {
     position: fixed;
     top: 20px;
-    right: 20px; /* stays fixed in place */
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+}
+.server-popup {
     background: #fff;
-    border-left: 5px solid red;
+    border-left: 5px solid grey;
     padding: 15px 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    font-family: sans-serif;
     font-size: 14px;
     color: #333;
     min-width: 220px;
-    transform: translateX(120%); /* hidden off-screen */
+    transform: translateX(120%);
     transition: transform 0.4s ease-in-out;
-    z-index: 9999;
 }
 .server-popup.show {
-    transform: translateX(0); /* slide in */
-}
-.server-popup.success {
-    border-left-color: green;
+    transform: translateX(0);
 }
 </style>
 <!-- Check server alive style END -->
 
     <!-- Check server alive script START -->
-      <script>
+<script>
+/*
+
+*/
 let serverAlive = true;
-let popup = document.getElementById("server-popup");
-let hideTimeout;
 
-function showPopup(message, success = false) {
+function showPopup(message, color = "grey", autoHide = false, hideOnTime = 3000) {
+    let popupContainer = document.getElementById("popup-container");
+    if (!popupContainer) {
+        console.error("❌ popup-container element missing in DOM");
+        return;
+    }
+    
+    let popup = document.createElement("div");
+    popup.setAttribute("data-msg", message);
+    popup.classList.add("server-popup", "show");
+    popup.style.borderLeftColor = color;
     popup.textContent = message;
-    popup.classList.add("show");
-    popup.classList.toggle("success", success);
+    
+    popupContainer.appendChild(popup);
 
-    if (success) {
-        clearTimeout(hideTimeout);
-        hideTimeout = setTimeout(() => {
+    if (autoHide) {
+        setTimeout(() => {
             popup.classList.remove("show");
-        }, 5000);
+            setTimeout(() => popup.remove(), 400); // wait for animation
+        }, hideOnTime);
     }
 }
 
@@ -150,14 +163,20 @@ function checkServerAlive() {
     fetch(window.location.origin, { method: 'HEAD', cache: 'no-store' })
         .then(res => {
             if (!res.ok) throw new Error();
-            if (!serverAlive) { // Was down, now up
-                showPopup("✅ Django server is running! Features available", true);
+            if (!serverAlive) { 
+                showPopup("✅ Django server is running! Features available", 'green', true);
+
+                // FIX: Correct selector to match created popups
+                const stoppedPopup = document.querySelector('.server-popup[data-msg="⚠ Django server has been stopped! Features unavailable"]');
+                if (stoppedPopup) {
+                    stoppedPopup.remove();
+                }
             }
             serverAlive = true;
         })
         .catch(() => {
-            if (serverAlive) { // Was up, now down
-                showPopup("⚠ Django server has been stopped! Features unavailable");
+            if (serverAlive) { 
+                showPopup("⚠ Django server has been stopped! Features unavailable", 'red', false);
             }
             serverAlive = false;
         });
@@ -168,6 +187,7 @@ setInterval(checkServerAlive, 5000);
 </script>
 <!-- Check server alive script END -->
 </nav>
+<!-- <nav>bar END -->
 
     <!-- Action Buttons -->
     <div class="d-flex justify-content-center gap-3 mt-4">
@@ -654,7 +674,8 @@ function removeSelected() {
     // If confirmed submit via javascript, Django handels post from indide the form
     let checkboxes = document.querySelectorAll('.row-checkbox:checked');
     if (checkboxes.length === 0) {
-        alert("Please select at least one URL to remove.");
+        showPopup("No URL has been selected", 'yellow' ,true, 2000);
+        //alert("Please select at least one URL to remove.");
         return;
     }
     if (confirm("Are you sure you want to move the selected URLs to trash?")) {

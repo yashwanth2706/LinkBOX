@@ -136,21 +136,38 @@
 */
 let serverAlive = true;
 
-function showPopup(message, color = "grey", autoHide = false, hideOnTime = 3000) {
+function showPopup(message, color = "grey", autoHide = false, hideOnTime = 3000, id = null) {
     let popupContainer = document.getElementById("popup-container");
-    if (!popupContainer) {
-        console.error("❌ popup-container element missing in DOM");
-        return;
+
+if (id) {
+  const existing = popupContainer.querySelector(`[data-id="${id}"]`);
+  if (existing) {
+    // update text & color instead of creating a duplicate
+    existing.textContent = message;
+    existing.style.borderLeftColor = color;
+
+    // reset hide timer if autoHide requested
+    if (autoHide) {
+      clearTimeout(existing._hideTimer);
+      existing._hideTimer = setTimeout(() => {
+        existing.classList.remove("show");
+        setTimeout(() => existing.remove(), 400);
+      }, hideOnTime);
     }
-    
+    return; // exit because we've updated the existing popup
+  }
+}
+
+    // Create the popup
     let popup = document.createElement("div");
-    popup.setAttribute("data-msg", message);
+    if (id) popup.setAttribute("data-id", id); // store unique identifier
     popup.classList.add("server-popup", "show");
     popup.style.borderLeftColor = color;
     popup.textContent = message;
-    
+
     popupContainer.appendChild(popup);
 
+    // Handle auto-hide if requested
     if (autoHide) {
         setTimeout(() => {
             popup.classList.remove("show");
@@ -164,19 +181,25 @@ function checkServerAlive() {
         .then(res => {
             if (!res.ok) throw new Error();
             if (!serverAlive) { 
-                showPopup("✅ Django server is running! Features available", 'green', true);
-
-                // FIX: Correct selector to match created popups
-                const stoppedPopup = document.querySelector('.server-popup[data-msg="⚠ Django server has been stopped! Features unavailable"]');
-                if (stoppedPopup) {
-                    stoppedPopup.remove();
-                }
+                showPopup(
+                    "✅ Django server is running! Features available",
+                    "green",
+                    true,
+                    3000,
+                    "server-status"
+                );
             }
             serverAlive = true;
         })
         .catch(() => {
             if (serverAlive) { 
-                showPopup("⚠ Django server has been stopped! Features unavailable", 'red', false);
+                showPopup(
+                    "⚠ Django server has been stopped! Features unavailable",
+                    "red",
+                    false,
+                    0,
+                    "server-status"
+                );
             }
             serverAlive = false;
         });
@@ -674,7 +697,7 @@ function removeSelected() {
     // If confirmed submit via javascript, Django handels post from indide the form
     let checkboxes = document.querySelectorAll('.row-checkbox:checked');
     if (checkboxes.length === 0) {
-        showPopup("No URL has been selected", 'yellow' ,true, 2000);
+        showPopup("No URL has been selected", 'yellow' ,true, 2000, 'checkbox-status');
         //alert("Please select at least one URL to remove.");
         return;
     }

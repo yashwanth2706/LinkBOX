@@ -1,0 +1,16 @@
+body {
+	font-family: "Courier New", Courier, monospace;
+	background-color: #f8f9fa;
+}
+.navbar {
+	background-color: #d1d5dc !important;
+	height: 60px;
+}
+.card {
+    max-width: 800px;
+	margin: 50px auto;
+	padding: 20px;
+}
+textarea {
+	resize: none;
+}

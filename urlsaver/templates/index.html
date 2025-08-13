@@ -344,155 +344,235 @@ document.addEventListener("DOMContentLoaded", function () {
 		</div>
 	</div>
 
-		<!-- URL Table Card (Updated Features) -->
-		<div class="card shadow mt-5">
-			<div class="p-3">
-				<div class="d-flex justify-content-between align-items-center mb-3">
-					<h5 class="mb-0">Stored URLs</h5>
-					<div class="d-flex gap-2 align-items-center">
-						<!-- Search Form -->
-						<form method="get" class="d-flex align-items-center me-2">
-							<input
-									type="text"
-									name="search"
-									class="form-control form-control-sm"
-									placeholder="Search URLs by Name..."
-									value="{{ search_query }}"
-									style="max-width: 200px"
-									/>
-							<button type="submit" class="btn btn-sm btn-primary ms-1">Search</button>
-						</form>
+<!-- URL Table Card (Updated Features) -->
+<div class="card shadow mt-5">
+    <div class="p-3">
+        <!-- FIX: Combined Search and Filter into a single form for robustness. -->
+        <form method="get" name="myname">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Stored URLs</h5>
+                <div class="d-flex gap-2 align-items-center">
+                    <!-- Search input and button are now part of the main form -->
+                    <div class="d-flex align-items-center me-2">
+                         <input
+                                type="text"
+                                name="search"
+                                class="form-control form-control-sm"
+                                placeholder="Search URLs by Name..."
+                                value="{{ search_query }}"
+                                style="max-width: 200px"
+                        />
+                        <button type="submit" class="btn btn-sm btn-primary ms-1">Search</button>
+                    </div>
 
-						<!-- Filter Toggle Button -->
-						<button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleFilters()">
-							Filters
-						</button>
-						<button class="btn btn-outline-secondary btn-sm" onclick="showExportPopup()">
-							Export
-						</button>
-						<button class="btn btn-outline-danger btn-sm" onclick="showTrashPopup()">
-							Show Trash
-						</button>
-					</div>
-				</div>
+                    <!-- These buttons are not part of the form submission -->
+                    <button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleFilters()">
+                        Filters
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" type="button" onclick="showExportPopup()">
+                        Export
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" type="button" onclick="showTrashPopup()">
+                        Show Trash
+                    </button>
+                </div>
+            </div>
 
-				<!-- Filter Form (initially hidden) -->
-				<form method="get" id = "filter" class="row g-2 mb-3" style="display: none;">
-					<div class="col-md-3">
-						<input type="text" name="tag" class="form-control form-control-sm" placeholder="Filter by Tag" value="{{ tag }}">
-					</div>
-					<div class="col-md-3">
-						<input type="text" name="category" class="form-control form-control-sm" placeholder="Filter by Category" value="{{ category }}">
-					</div>
-					<div class="col-md-3">
-						<input type="text" name="sub_category" class="form-control form-control-sm" placeholder="Filter by Sub Category" value="{{ sub_category }}">
-					</div>
-					<div class="col-md-3 d-flex">
-						<button type="submit" class="btn btn-sm btn-primary w-100">Apply Filters</button>
-					</div>
-				</form>
+            <!-- Filter section is now just a div within the single form -->
+            <div id="filter" class="row g-2 mb-3" style="display: none;">
+                <div class="col-md-3">
+                    <input type="text" name="tag" class="form-control form-control-sm" placeholder="Filter by Tag" value="{{ tag }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="category" class="form-control form-control-sm" placeholder="Filter by Category" value="{{ category }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="sub_category" class="form-control form-control-sm" placeholder="Filter by Sub Category" value="{{ sub_category }}">
+                </div>
+                <div class="col-md-3 d-flex">
+                    <!-- This button will now submit the entire form, including the search query -->
+                    <button type="submit" class="btn btn-sm btn-primary w-100">Apply Filters</button>
+                </div>
+            </div>
+        </form>
 
-				<form id="bulkDeleteForm" method="post" action="{% url 'delete-selected' %}">
-					{% csrf_token %}
-					<div class="table-responsive">
-						<table class="table table-bordered table-hover">
-							<thead class="table-light">
-								<tr>
-									<th title="Select All"><input id="selectAll" type="checkbox"></th>
-									<th>#</th>
-									<th>Name</th>
-									<th>Category</th>
-									<th>Sub Category</th>
-									<th>Tags</th>
-									<th>Preview</th>
-									<th>Visit</th>
-									<th>Edit</th>
-								</tr>
-							</thead>
-							<tbody>
-								{% if page_obj %}
-								{% for url in page_obj %}
-								<tr>
-									<td><input type="checkbox" class="row-checkbox" name="selected_urls" value="{{ url.id }}"></td>
-									<td>{{ forloop.counter }}</td>
-									<td>{{ url.name }}</td>
-									<td>{{ url.effective_category }}</td>
-									<td>{{ url.sub_category }}</td>
-									<td>{{ url.tags }}</td>
-									<td>
-										<button type="button" class="btn btn-sm btn-outline-secondary" onclick="showPopup('This feature is not implemented', 'darkblue' ,true, 2000, 'checkbox-test');">Preview</button>
-									</td>
-									<td>
-										<a target="_blank" rel="noopener noreferrer" href="{% url 'visit-url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
-									</td>
-									<td>
-										<button type="button" class="btn btn-outline-dark btn-sm"
-												      onclick="openEditModal('{{ url.id }}', '{{ url.name|escapejs }}', '{{ url.url|escapejs }}', '{{ url.category }}', '{{ url.custom_category|escapejs }}', '{{ url.sub_category|escapejs }}', '{{ url.tags|escapejs }}')">
-											Edit
-										</button>
-									</td>
-								</tr>
-								{% endfor %}
-								{% else %}
-								<tr>
-									<td colspan="10" class="text-center">No URLs found.</td>
-								</tr>
-								{% endif %}
-							</tbody>
-						</table>
-					</div>
-				</form>
+        <!-- This form for bulk actions remains separate because it uses POST -->
+        <form id="bulkDeleteForm" method="post" action="{% url 'delete-selected' %}">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                    <tr>
+                        <th title="Select All"><input id="selectAll" type="checkbox"></th>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Tags</th>
+                        <th>Preview</th>
+                        <th>Visit</th>
+                        <th>Edit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if page_obj %}
+                    {% for url in page_obj %}
+                    <tr>
+                        <td><input type="checkbox" class="row-checkbox" name="selected_urls" value="{{ url.id }}"></td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ url.name }}</td>
+                        <td>{{ url.effective_category }}</td>
+                        <td>{{ url.sub_category }}</td>
+                        <td>{{ url.tags }}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="showPopup('This feature is not implemented', 'darkblue' ,true, 2000, 'checkbox-test');">Preview</button>
+                        </td>
+                        <td>
+                            <a target="_blank" rel="noopener noreferrer" href="{% url 'visit-url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-dark btn-sm"
+                                    onclick="openEditModal('{{ url.id }}', '{{ url.name|escapejs }}', '{{ url.url|escapejs }}', '{{ url.category }}', '{{ url.custom_category|escapejs }}', '{{ url.sub_category|escapejs }}', '{{ url.tags|escapejs }}')">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="10" class="text-center">No URLs found.</td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
 
-				<!-- Pagination -->
-				<div class="d-flex justify-content-between align-items-center">
-					<!-- Left: Remove button -->
-					<button type="button" class="btn btn-sm btn-danger" onclick="removeSelected()">
-						Remove Selected
-					</button>
-					<nav aria-label="Page navigation">
-						<ul class="pagination pagination-sm justify-content-end">
-							{# Previous button #}
-							{% if page_obj.has_previous %}
-							<li class="page-item">
-								<a class="page-link"
-								   href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
-									Previous
-								</a>
-							</li>
-							{% else %}
-							<li class="page-item disabled"><span class="page-link">Previous</span></li>
-							{% endif %}
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Left: Remove button -->
+            <button type="button" class="btn btn-sm btn-danger" onclick="removeSelected()">
+                Remove Selected
+            </button>
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm justify-content-end">
+                    {# Previous button #}
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+                            Previous
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                    {% endif %}
 
-							{# Page numbers #}
-							{% for num in page_obj.paginator.page_range %}
-							{% if page_obj.number == num %}
-							<li class="page-item active"><span class="page-link">{{ num }}</span></li>
-							{% else %}
-							<li class="page-item">
-								<a class="page-link"
-								   href="?page={{ num }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
-									{{ num }}
-								</a>
-							</li>
-							{% endif %}
-							{% endfor %}
+                    {# Page numbers #}
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ num }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
 
-							{# Next button #}
-							{% if page_obj.has_next %}
-							<li class="page-item">
-								<a class="page-link"
-								   href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
-									Next
-								</a>
-							</li>
-							{% else %}
-							<li class="page-item disabled"><span class="page-link">Next</span></li>
-							{% endif %}
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</div>
+                    {# Next button #}
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+                            Next
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Export Popup Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Export Options</h5>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <button class="btn btn-outline-primary w-100 mb-2">
+                    Export as PDF
+                </button>
+                <button class="btn btn-outline-success w-100">Export as CSV</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Trash Popup Modal -->
+<div class="modal fade" id="trashModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="margin:10px;">Recycle Bin</h5>
+                <h6 style="font-size: 12px; color:blue">*Contents are deleted permanently after 30days from the time of removal</h6>
+                <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                    <tr>
+                        <th><input type="checkbox" id="selectAllTrash"/></th>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>URL</th>
+                        <th>Category</th>
+                        <th>Deleted On</th>
+                    </tr>
+                    </thead>
+                    <tbody  id="trashTableBody">
+                    <!-- Trash rows here -->
+
+                    </tbody>
+                </table>
+                <nav>
+                    <ul class="pagination pagination-sm justify-content-end" id="trashPagination"></ul>
+                </nav>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-outline-success" onclick="recoverSelected()">Retrieve Selected</button>
+                    <button
+                            title = "Deletes Everything Permanently from Trash"
+                            class="btn btn-outline-danger"
+                            onclick="deleteAll()">
+                        Empty Trash
+                    </button>
+                    <button
+                            title = "Deletes only selected item(s)"
+                            class="btn btn-outline-danger"
+                            onclick="deleteSelected()">
+                        Delete Selected
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 		<!-- Export Popup Modal -->
 		<div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">

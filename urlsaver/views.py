@@ -9,36 +9,12 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 import json
+#import sys
 #from django.http import request
 
 # Create your views here.
-def indexPage(request):
-    tag = request.GET.get('tag')
-    category = request.GET.get('category')
-    sub_category = request.GET.get('sub_category')
-
-    urls = UrlEntry.objects.filter(is_deleted=False)
-
-    if tag:
-        urls = urls.filter(tags__icontains=tag)
-    if category:
-        urls = urls.filter(category__iexact=category)
-    if sub_category:
-        urls = urls.filter(sub_category__iexact=sub_category)
-
-    paginator = Paginator(urls.order_by('-created_at'), 5)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, 'index.html', {'page_obj': page_obj})
-
-def visit_url(request, pk):
-    url_entry = get_object_or_404(UrlEntry, pk=pk, is_deleted=False)
-    url_entry.visit_count += 1
-    url_entry.save(update_fields=['visit_count'])
-    return redirect(url_entry.url)
-
-def stored_urls_view(request):
+def indexPage(request): 
+    
     tag = request.GET.get('tag', '').strip()
     category = request.GET.get('category', '').strip()
     sub_category = request.GET.get('sub_category', '').strip()
@@ -47,23 +23,37 @@ def stored_urls_view(request):
     # Base queryset
     url_list = UrlEntry.objects.filter(is_deleted=False)
 
-    # Apply filters
+    # Filter by category
+    if category:
+        url_list = url_list.filter(
+            Q(category__icontains=category) | 
+            Q(custom_category__icontains=category)
+        )
+    # Filter by tag
     if tag:
         url_list = url_list.filter(tags__icontains=tag)
-    if category:
-        url_list = url_list.filter(category__icontains=category)
+    # Filter by sub-category
     if sub_category:
         url_list = url_list.filter(sub_category__icontains=sub_category)
 
-    # Apply search (across multiple fields)
+    # Apply search query
     if search_query:
         url_list = url_list.filter(
             Q(name__icontains=search_query) |
             Q(url__icontains=search_query) |
-            Q(tags__icontains=search_query)
+            Q(tags__icontains=search_query) |
+            Q(category__icontains=search_query) |
+            Q(custom_category__icontains=search_query) |
+            Q(sub_category__icontains=search_query)
         )
 
     url_list = url_list.order_by('-created_at')
+    
+    # Debugging prints
+    #print("Result count:", url_list.count())
+    #print("SQL Query:", url_list.query)
+    #sys.stdout.flush()
+    
     paginator = Paginator(url_list, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -75,7 +65,12 @@ def stored_urls_view(request):
         "category": category,
         "sub_category": sub_category,
     })
-
+def visit_url(request, pk):
+    url_entry = get_object_or_404(UrlEntry, pk=pk, is_deleted=False)
+    url_entry.visit_count += 1
+    url_entry.save(update_fields=['visit_count'])
+    return redirect(url_entry.url)
+    
 @require_POST
 def add_url(request):
     name = request.POST.get("name")

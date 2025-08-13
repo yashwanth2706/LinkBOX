@@ -377,7 +377,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				</div>
 
 				<!-- Filter Form (initially hidden) -->
-				<form method="get" class="row g-2 mb-3" id="filterForm" style="display: none;">
+				<form method="get" id = "filter" class="row g-2 mb-3" style="display: none;">
 					<div class="col-md-3">
 						<input type="text" name="tag" class="form-control form-control-sm" placeholder="Filter by Tag" value="{{ tag }}">
 					</div>
@@ -686,7 +686,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		<!-- Script to toggle filter visibility -->
 		<script>
 			function toggleFilters() {
-				const filterForm = document.getElementById('filterForm');
+				const filterForm = document.getElementById('filter');
 				filterForm.style.display = filterForm.style.display === 'none' ? 'flex' : 'none';
 			}
 

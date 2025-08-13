@@ -11,7 +11,6 @@
  * @param {String} [id=null] The unique identifier for this popup.
  */
 
-let serverAlive = true;
 function showPopup(message, color = "grey", autoHide = false, hideOnTime = 3000, id = null) {
 	let popupContainer = document.getElementById("popup-container");
 
@@ -52,41 +51,3 @@ function showPopup(message, color = "grey", autoHide = false, hideOnTime = 3000,
         }, hideOnTime);
     }
 }
-
-/**
- * Checks if the Django server is alive and shows a notification accordingly.
- * If the server is responding, a green "✅ Django server is running!" popup is
- * shown with a 3000ms auto-hide. If the server is not responding, a red "⚠
- * Django server has been stopped!" popup is shown without auto-hide.
- */
-function checkServerAlive() {
-	fetch(window.location.origin, { method: 'HEAD', cache: 'no-store' })
-		.then(res => {
-			if (!res.ok) throw new Error();
-			if (!serverAlive) { 
-				showPopup(
-					"  Django server is running! Features available",
-					"green",
-					true,
-					3000,
-					"server-status"
-				);
-			}
-			serverAlive = true;
-		})
-		.catch(() => {
-			if (serverAlive) { 
-				showPopup(
-					"  Django server has been stopped! Features unavailable",
-					"red",
-					false,
-					0,
-					"server-status"
-				);
-			}
-			serverAlive = false;
-		});
-}
-
-checkServerAlive();
-setInterval(checkServerAlive, 5000);

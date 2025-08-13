@@ -11,12 +11,13 @@
         <!-- This div is important to check if bootstrap from CDN loaded or not -->
 		<div id="css-check" class="d-none"></div>
 
-        <!-- JS links from static -->
-		<script src="{% static 'js/popup_slidecard.js' %}"></script>
-
         <!-- CSS links from static -->
         <link rel="stylesheet" href="{% static 'css/base_sitewide.css' %}">
 		<link rel="stylesheet" href="{% static 'css/popup_slidecard.css' %}">
+
+        <!-- JS links from static -->
+		<script src="{% static 'js/popup_slidecard.js' %}"></script>
+        <script src="{% static 'js/check_serverstatus.js' %}"></script>
 
 		<!-- Local bootstrap loaded debug script START -->
 		<script>
@@ -314,15 +315,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const urlForm = document.getElementById("urlForm");
     const addUrlModal = document.getElementById("addUrlModal");
-
-    // Reset form on submit
-    urlForm.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent default for demo
-        console.log("Form submitted with URL:", document.getElementById("url-textarea").value);
-        this.reset();
-        // Optional: also reset to default add mode after submit
-        resetFormToDefault();
-    });
 
     // Reset form when modal is closed
     addUrlModal.addEventListener("hidden.bs.modal", function () {
@@ -760,7 +752,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				const selectedIds = getSelectedTrashIds();
 
 				if (!selectedIds.length) {
-					alert('Please select at least one item.');
+                    showPopup("Please select atleast one item.", 'yellow' , true, 2000, 'checkbox-status-alert');
 					return;
 				}
 
@@ -799,7 +791,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				const allIds = getAllTrashIds();
 
 				if (!allIds.length) {
-					alert('No items to delete.');
+                    showPopup("No items to delete.", 'red' ,true, 2000, 'no-items-in-trash');
 					return;
 				}
 
@@ -842,7 +834,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					.map(cb => cb.value);
 
 				if (!selectedIds.length) {
-					alert('Please select at least one item.');
+                    showPopup("Please select atleast one item.", 'yellow' , true, 2000, 'checkbox-status-alert');
 					return;
 				}
 

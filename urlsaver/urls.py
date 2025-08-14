@@ -14,4 +14,5 @@ urlpatterns = [
     path('get-url-details/<int:url_id>/', views.get_url_details, name='get-url-details'),
     path('edit-url/<int:url_id>/', views.edit_url_view, name='edit-url'),
     path('delete-selected/', views.delete_selected, name='delete-selected'),
+    path('activity-data/', views.activity_data, name='activity-data'),
 ]

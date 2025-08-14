@@ -273,7 +273,7 @@
 
 							<div class="mb-3">
 								<label for="url-textarea" class="form-label">Enter or paste your URL:</label>
-								<textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com"></textarea>
+								<textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com" required></textarea>
 							</div>
 
 							<div class="mb-3">
@@ -283,7 +283,7 @@
 
 							<div class="row">
 								<div class="col-md-6 mb-3">
-									<label for="category" class="form-label">Category</label>
+									<label for="category" class="form-label" required>Category</label>
 									<select class="form-select" id="category" name="category">
 										<option selected disabled>Choose category</option>
 										<option value="youtube">YouTube</option>
@@ -342,6 +342,63 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('custom-category-group').style.display = 'none';
         document.getElementById('custom-category').value = "";
     }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const urlForm = document.getElementById('urlForm');
+
+    urlForm.addEventListener('submit', function(event) {
+        // 1. Prevent the default browser form submission (the page reload)
+        event.preventDefault();
+
+        const form = event.target;
+        const url = form.action; // The URL to send the data to (e.g., /edit-url/9/)
+        const formData = new FormData(form);
+
+        // 2. Send the form data in the background using the Fetch API
+        fetch(url, {
+            method: 'POST',
+            body: formData,
+            // Add the CSRF token to the request headers
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        })
+        .then(response => response.json()) // Parse the JSON response from the server
+        .then(data => {
+            // 3. Process the JSON data
+            if (data.status === 'success') {
+                // On success:
+                // a. Close the modal
+                const modalEl = document.getElementById('addUrlModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                modal.hide();
+
+                // b. Show your success popup (you already have this function)
+                showPopup(data.message, 'green', true, 3000, 'edit-success');
+                
+                // c. Reload the page to see the changes (simplest way)
+                setTimeout(() => {
+                    location.reload();
+                }, 1000); // Reload after 1 second
+
+            } else if (data.status === 'error') {
+                // On error:
+                // For now, we'll just show a generic error.
+                // You could expand this to show specific field errors from data.errors
+                let errorMessage = 'Please fix the errors below.';
+                if (data.errors.url) {
+                    errorMessage = data.errors.url[0]; // Show the specific URL error
+                }
+                showPopup(errorMessage, 'red', true, 3000, 'edit-error');
+            }
+        })
+        .catch(error => {
+            console.error('Submission failed:', error);
+            showPopup('An unexpected error occurred.', 'red', true, 3000, 'edit-unexpected-error');
+        });
+    });
 });
 </script>
 			</div>

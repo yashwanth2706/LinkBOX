@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 import json
-#import sys
+from .forms import UrlForm
 #from django.http import request
 
 # Create your views here.
@@ -71,29 +71,30 @@ def visit_url(request, pk):
     url_entry.save(update_fields=['visit_count'])
     return redirect(url_entry.url)
     
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.views.decorators.http import require_POST
+from .forms import UrlForm
+
 @require_POST
 def add_url(request):
-    name = request.POST.get("name")
-    url = request.POST.get("url")
-    category = request.POST.get("category")
-    custom_category = request.POST.get("custom_category")
-    sub_category = request.POST.get("sub_category")
-    tags = request.POST.get("tags")
+    # Initialize the form with the submitted POST data
+    form = UrlForm(request.POST)
 
-    if url:
-        UrlEntry.objects.create(
-            name=name,
-            url=url,
-            category=category,
-            custom_category=custom_category,
-            sub_category=sub_category,
-            tags=tags
-        )
-        messages.success(request, "URL saved successfully.")
+    # Validate the form
+    if form.is_valid():
+        # If the data is valid, save it as a new object
+        form.save()
+        return JsonResponse({
+            'status': 'success',
+            'message': 'URL saved successfully.'
+        })
     else:
-        messages.error(request, "URL is required.")
-
-    return redirect("index")
+        # If invalid, return a 400 error with the validation errors
+        return JsonResponse({
+            'status': 'error',
+            'errors': form.errors
+        }, status=400)  
 @require_POST
 def delete_url(request, pk):
     url_entry = get_object_or_404(UrlEntry, pk=pk, is_deleted=False)
@@ -137,20 +138,6 @@ def trash_recover(request):
         UrlEntry.objects.filter(id__in=ids).update(is_deleted=False, deleted_at=None)
         return JsonResponse({'status': 'success'})
     
-def edit_url(request, pk):
-    url_entry = get_object_or_404(UrlEntry, pk=pk)
-
-    if request.method == 'POST':
-        url_entry.name = request.POST.get('name')
-        url_entry.url = request.POST.get('url')
-        url_entry.category = request.POST.get('category')
-        url_entry.sub_category = request.POST.get('sub_category')
-        url_entry.tags = request.POST.get('tags')
-        url_entry.save()
-        messages.success(request, "URL updated successfully.")
-        return redirect('stored-urls')  # or stored_urls_view if separate
-
-    return render(request, 'edit_url.html', {'url': url_entry})
 
 def get_url_details(request, url_id):
     url = UrlEntry.objects.get(pk=url_id)
@@ -166,15 +153,23 @@ def get_url_details(request, url_id):
     
 @require_POST
 def edit_url_view(request, url_id):
-    url = get_object_or_404(UrlEntry, pk=url_id)
-    url.url = request.POST.get('url', '')
-    url.name = request.POST.get('name', '')
-    url.category = request.POST.get('category', '')
-    url.custom_category = request.POST.get('custom_category', '')
-    url.sub_category = request.POST.get('sub_category', '')
-    url.tags = request.POST.get('tags', '')
-    url.save()
-    return redirect('stored-urls')  # Update to match your view name
+    url_instance = get_object_or_404(UrlEntry, pk=url_id)
+    form = UrlForm(request.POST, instance=url_instance)
+
+    if form.is_valid():
+        form.save()
+        # On success, return a JSON object with a success status
+        return JsonResponse({
+            'status': 'success', 
+            'message': 'URL updated successfully.'
+        })
+    else:
+        # On failure, return the form errors as JSON
+        # status=400 indicates a bad request, which is good practice
+        return JsonResponse({
+            'status': 'error', 
+            'errors': form.errors
+        }, status=400)
 
 @require_POST
 def delete_selected(request):

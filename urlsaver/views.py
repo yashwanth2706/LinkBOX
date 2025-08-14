@@ -70,12 +70,6 @@ def visit_url(request, pk):
     url_entry.visit_count += 1
     url_entry.save(update_fields=['visit_count'])
     return redirect(url_entry.url)
-    
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.views.decorators.http import require_POST
-from .forms import UrlForm
-
 @require_POST
 def add_url(request):
     # Initialize the form with the submitted POST data

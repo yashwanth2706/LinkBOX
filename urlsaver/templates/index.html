@@ -141,10 +141,14 @@
 			</div>
 			<div class="offcanvas-body">
 				<p>
-				<strong>Number of URLs stored:</strong> <span id="url-count">--</span>
+				<strong>Number of URLs stored:</strong> <span id="total-url-count">{{ total_url_count }}</span>
 				</p>
 				<hr />
-				<h6>Top 10 Most Visited URLs:</h6>
+                <p>
+				<strong>Number of URLs trashed:</strong> <span id="trashed-url-count">{{ trashed_url_count }}</span>
+				</p>
+				<hr />
+				<!-- <h6>Top 10 Most Visited URLs:</h6> -->
 				<ul id="top-visited-list" class="list-group list-group-flush">
 					<!-- Example item -->
 					<!-- <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -650,6 +654,22 @@ document.addEventListener("DOMContentLoaded", function () {
 		</div>
 
 		<!-- Script tags for Web Actions -->
+
+<script>
+    // This function runs when the page has finished loading
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fetch data from the new URL
+        fetch("{% url 'activity-data' %}")
+            .then(response => response.json())
+            .then(data => {
+                // Update the HTML elements with the data from the view
+                document.getElementById('total-url-count').textContent = data.total_url_count;
+                document.getElementById('trashed-url-count').textContent = data.trashed_url_count;
+            })
+            .catch(error => console.error('Error fetching activity data:', error));
+    });
+</script>        
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const urlForm = document.getElementById("urlForm");

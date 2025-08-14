@@ -183,3 +183,16 @@ def delete_selected(request):
         # Move to trash instead of hard delete
         UrlEntry.objects.filter(id__in=ids).update(is_deleted=True)
     return redirect('index')
+
+def activity_data(request):
+    """
+    Provides a JSON response with URL counts for the activity panel.
+    """
+    total_url_count = UrlEntry.objects.filter(is_deleted=False).count()
+    trashed_url_count = UrlEntry.objects.filter(is_deleted=True).count()
+
+    data = {
+        'total_url_count': total_url_count,
+        'trashed_url_count': trashed_url_count,
+    }
+    return JsonResponse(data)

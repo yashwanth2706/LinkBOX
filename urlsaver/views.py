@@ -10,10 +10,11 @@ from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .forms import UrlForm
+from django.db import transaction
 #from django.http import request
 
 # Create your views here.
-def indexPage(request): 
+def index(request): 
     
     tag = request.GET.get('tag', '').strip()
     category = request.GET.get('category', '').strip()
@@ -48,11 +49,6 @@ def indexPage(request):
         )
 
     url_list = url_list.order_by('-created_at')
-    
-    # Debugging prints
-    #print("Result count:", url_list.count())
-    #print("SQL Query:", url_list.query)
-    #sys.stdout.flush()
     
     paginator = Paginator(url_list, 5)
     page_number = request.GET.get("page")
@@ -185,3 +181,4 @@ def activity_data(request):
         'trashed_url_count': trashed_url_count,
     }
     return JsonResponse(data)
+

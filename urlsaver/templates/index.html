@@ -148,7 +148,7 @@
 					</div>
 
 					<!-- We'll dynamically update `action` via JS -->
-					<form method="post" id="urlForm" action="{% url 'add-url' %}">
+					<form method="post" id="urlForm" action="{% url 'add_url' %}">
 						{% csrf_token %}
 						<div class="modal-body">
 							<input type="hidden" id="url-id" name="url_id" /> <!-- for editing -->
@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {
         urlForm.reset();
 
         // Reset form action back to default add URL endpoint
-        urlForm.action = "{% url 'add-url' %}";
+        urlForm.action = "{% url 'add_url' %}";
 
         // Reset hidden ID field
         document.getElementById("url-id").value = "";
@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </form>
 
         <!-- This form for bulk actions remains separate because it uses POST -->
-        <form id="bulkDeleteForm" method="post" action="{% url 'delete-selected' %}">
+        <form id="bulkDeleteForm" method="post" action="{% url 'delete_selected' %}">
             {% csrf_token %}
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="showPopup('This feature is not implemented', 'darkblue' ,true, 2000, 'checkbox-test');">Preview</button>
                         </td>
                         <td>
-                            <a target="_blank" rel="noopener noreferrer" href="{% url 'visit-url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
+                            <a target="_blank" rel="noopener noreferrer" href="{% url 'visit_url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
                         </td>
                         <td>
                             <button type="button" class="btn btn-outline-dark btn-sm"
@@ -598,7 +598,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // This function runs when the page has finished loading
     document.addEventListener('DOMContentLoaded', function() {
         // Fetch data from the new URL
-        fetch("{% url 'activity-data' %}")
+        fetch("{% url 'activity_data' %}")
             .then(response => response.json())
             .then(data => {
                 // Update the HTML elements with the data from the view
@@ -623,7 +623,7 @@ document.addEventListener("DOMContentLoaded", function () {
         urlForm.reset();
 
         // Reset form action back to default add URL endpoint
-        urlForm.action = "{% url 'add-url' %}";
+        urlForm.action = "{% url 'add_url' %}";
 
         // Reset hidden ID field
         document.getElementById("url-id").value = "";
@@ -720,7 +720,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				}
 
 				// Fetch data for the first page
-				fetch(`/trash-data/?page=1`)
+				fetch(`/trash_data/?page=1`)
 					.then(response => response.json())
 					.then(data => {
 						// Update the modal's content
@@ -735,7 +735,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			// 3. This function is ONLY for pagination. It just updates content inside the ALREADY OPEN modal.
 			function loadTrashPage(page) {
-				fetch(`/trash-data/?page=${page}`)
+				fetch(`/trash_data/?page=${page}`)
 					.then(response => response.json())
 					.then(data => {
 						// Just update the content.
@@ -768,7 +768,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					return;
 				}
 
-				fetch('/trash-delete/', {
+				fetch('/trash_delete/', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -812,7 +812,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					return;
 				}
 
-				fetch('/trash-delete/', {
+				fetch('/trash_delete/', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -850,7 +850,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					return;
 				}
 
-				fetch('/trash-recover/', {
+				fetch('/trash_recover/', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',

@@ -89,13 +89,34 @@
         static/css/popup_slidecard.css
         static/css/popup_slidecard.css
         -->
-		<nav class="navbar">
-			<div class="container">
-				<h4 class="m-0"><strong>LinkBOX</strong></h4>
-				<div id="popup-container" style="font-family: 'Courier New', Courier, monospace;"></div>
-			</div>
-		</nav>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container d-flex align-items-center">
+            <!-- Left: App Name -->
+            <h3 class="m-0"><strong>LinkBOX</strong></h3>
+
+            <!-- Center: Username -->
+            {% if user.is_authenticated %}
+            <h4>
+            <span class="mx-auto">Welcome, {{ user.username }}</span>
+            </h4>
+            {% endif %}
+
+            <!-- Right: Logout -->
+            {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-dark btn-sm">Logout</button>
+            </form>
+            {% endif %}
+        </div>
+    </nav>
 		<!-- <nav>bar END -->
+    
+    <!-- Popup section start -->
+    <section>
+        <div id="popup-container" style="font-family: 'Courier New', Courier, monospace;"></div>
+    </section>
+    <!-- Popup section end -->
 
 		<!-- Action Buttons -->
 		<div class="d-flex justify-content-center gap-3 mt-4">
@@ -148,13 +169,13 @@
 					</div>
 
 					<!-- We'll dynamically update `action` via JS -->
-					<form method="post" id="urlForm" action="{% url 'add-url' %}">
+					<form method="post" id="urlForm" action="{% url 'add_url' %}">
 						{% csrf_token %}
 						<div class="modal-body">
 							<input type="hidden" id="url-id" name="url_id" /> <!-- for editing -->
 
 							<div class="mb-3">
-								<label for="url-textarea" class="form-label">Enter or paste your URL:</label>
+								<label for="url-textarea" class="form-label">*Enter or paste your URL:</label>
 								<textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com" required></textarea>
 							</div>
 
@@ -188,7 +209,7 @@
 							</div>
 
 							<div class="mb-3">
-								<label for="tags" class="form-label">Tags (comma separated)</label>
+								<label for="tags" class="form-label">Tags (Optional) - Comma Separated</label>
 								<input type="text" class="form-control" id="tags" name="tags" placeholder="e.g. design, inspiration, vector">
 							</div>
 						</div>
@@ -211,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
         urlForm.reset();
 
         // Reset form action back to default add URL endpoint
-        urlForm.action = "{% url 'add-url' %}";
+        urlForm.action = "{% url 'add_url' %}";
 
         // Reset hidden ID field
         document.getElementById("url-id").value = "";
@@ -288,8 +309,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	</div>
 
 <!-- URL Table Card (Updated Features) -->
-<div class="card shadow mt-5">
-    <div class="p-3">
+<div class="container-fluid mt-5">
+    <div class="p-3 border rounded-3 shadow-sm bg-white">
         <!-- FIX: Combined Search and Filter into a single form for robustness. -->
         <form method="get" name="myname">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -340,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </form>
 
         <!-- This form for bulk actions remains separate because it uses POST -->
-        <form id="bulkDeleteForm" method="post" action="{% url 'delete-selected' %}">
+        <form id="bulkDeleteForm" method="post" action="{% url 'delete_selected' %}">
             {% csrf_token %}
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
@@ -371,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <button type="button" class="btn btn-sm btn-outline-secondary" onclick="showPopup('This feature is not implemented', 'darkblue' ,true, 2000, 'checkbox-test');">Preview</button>
                         </td>
                         <td>
-                            <a target="_blank" rel="noopener noreferrer" href="{% url 'visit-url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
+                            <a target="_blank" rel="noopener noreferrer" href="{% url 'visit_url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
                         </td>
                         <td>
                             <button type="button" class="btn btn-outline-dark btn-sm"
@@ -393,6 +414,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <!-- Pagination -->
         <div class="d-flex justify-content-between align-items-center">
+        <!-- Records per page selector -->
+        <div class="form-inline">
+            <label for="recordsPerPage" class="mr-2">Show</label>
+            <select id="recordsPerPage" class="form-control form-control-sm" onchange="updateRecordsPerPage(this)">
+                <option value="5" {% if show_n_records == 5 %}selected{% endif %}>5</option>
+                <option value="10" {% if show_n_records == 10 %}selected{% endif %}>10</option>
+                <option value="15" {% if show_n_records == 15 %}selected{% endif %}>15</option>
+                <option value="25" {% if show_n_records == 25 %}selected{% endif %}>25</option>
+            </select>
+            <span class="ml-2">records</span>
+        </div>
             <!-- Left: Remove button -->
             <button type="button" class="btn btn-sm btn-danger" onclick="removeSelected()">
                 Remove Selected
@@ -441,6 +473,15 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </div>
+<script>
+function updateRecordsPerPage(select) {
+    const value = select.value;
+    const url = new URL(window.location.href);
+    url.searchParams.set("show_n_records", value);
+    url.searchParams.set("page", 1);
+    window.location.href = url.toString();
+}
+</script>
 
 <!-- Export Popup Modal -->
 <div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">
@@ -598,7 +639,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // This function runs when the page has finished loading
     document.addEventListener('DOMContentLoaded', function() {
         // Fetch data from the new URL
-        fetch("{% url 'activity-data' %}")
+        fetch("{% url 'activity_data' %}")
             .then(response => response.json())
             .then(data => {
                 // Update the HTML elements with the data from the view
@@ -623,7 +664,7 @@ document.addEventListener("DOMContentLoaded", function () {
         urlForm.reset();
 
         // Reset form action back to default add URL endpoint
-        urlForm.action = "{% url 'add-url' %}";
+        urlForm.action = "{% url 'add_url' %}";
 
         // Reset hidden ID field
         document.getElementById("url-id").value = "";
@@ -720,7 +761,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				}
 
 				// Fetch data for the first page
-				fetch(`/trash-data/?page=1`)
+				fetch(`/trash_data/?page=1`)
 					.then(response => response.json())
 					.then(data => {
 						// Update the modal's content
@@ -735,7 +776,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			// 3. This function is ONLY for pagination. It just updates content inside the ALREADY OPEN modal.
 			function loadTrashPage(page) {
-				fetch(`/trash-data/?page=${page}`)
+				fetch(`/trash_data/?page=${page}`)
 					.then(response => response.json())
 					.then(data => {
 						// Just update the content.
@@ -768,7 +809,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					return;
 				}
 
-				fetch('/trash-delete/', {
+				fetch('/trash_delete/', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -812,7 +853,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					return;
 				}
 
-				fetch('/trash-delete/', {
+				fetch('/trash_delete/', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -850,7 +891,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					return;
 				}
 
-				fetch('/trash-recover/', {
+				fetch('/trash_recover/', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',

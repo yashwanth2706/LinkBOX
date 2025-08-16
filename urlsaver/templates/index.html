@@ -89,13 +89,32 @@
         static/css/popup_slidecard.css
         static/css/popup_slidecard.css
         -->
-		<nav class="navbar">
-			<div class="container">
-				<h4 class="m-0"><strong>LinkBOX</strong></h4>
-				<div id="popup-container" style="font-family: 'Courier New', Courier, monospace;"></div>
-			</div>
-		</nav>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container d-flex align-items-center">
+            <!-- Left: App Name -->
+            <h4 class="m-0"><strong>LinkBOX</strong></h4>
+
+            <!-- Center: Username -->
+            {% if user.is_authenticated %}
+            <span class="mx-auto">Welcome, {{ user.username }}</span>
+            {% endif %}
+
+            <!-- Right: Logout -->
+            {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-dark btn-sm">Logout</button>
+            </form>
+            {% endif %}
+        </div>
+    </nav>
 		<!-- <nav>bar END -->
+    
+    <!-- Popup section start -->
+    <section>
+        <div id="popup-container" style="font-family: 'Courier New', Courier, monospace;"></div>
+    </section>
+    <!-- Popup section end -->
 
 		<!-- Action Buttons -->
 		<div class="d-flex justify-content-center gap-3 mt-4">

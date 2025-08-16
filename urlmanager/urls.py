@@ -46,6 +46,6 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='auth/password_reset_complete.html'
     ), name='password_reset_complete'),
-    
+    path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
     path('', include('urlsaver.urls')),
 ]

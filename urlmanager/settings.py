@@ -124,7 +124,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'         
-LOGOUT_REDIRECT_URL = 'login'        
+#LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = '/'        
 
 # Dev-only: emails print to console
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

@@ -12,6 +12,7 @@ from .forms import UrlForm
 from .forms import SignUpForm, LoginForm
 from .models import UrlEntry
 import json
+from django.core.paginator import Paginator
 
 # -------- Auth views --------
 def signup_view(request):
@@ -47,6 +48,8 @@ def index(request):
     category = request.GET.get('category', '').strip()
     sub_category = request.GET.get('sub_category', '').strip()
     search_query = request.GET.get('search', '').strip()
+    
+    show_n_records = request.GET.get('show_n_records', '5').strip()
 
     # Only current user's, not deleted
     url_list = UrlEntry.objects.filter(user=request.user, is_deleted=False)
@@ -67,9 +70,14 @@ def index(request):
             Q(sub_category__icontains=search_query)
         )
 
-    from django.core.paginator import Paginator
     url_list = url_list.order_by('-created_at')
-    paginator = Paginator(url_list, 5)
+    
+    try:
+        per_page = int(show_n_records)
+    except ValueError:
+        per_page = 5
+    
+    paginator = Paginator(url_list, int(show_n_records))
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -79,6 +87,7 @@ def index(request):
         "tag": tag,
         "category": category,
         "sub_category": sub_category,
+        "show_n_records": per_page,
     })
 
 @login_required

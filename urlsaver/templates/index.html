@@ -92,11 +92,13 @@
     <nav class="navbar navbar-light bg-light">
         <div class="container d-flex align-items-center">
             <!-- Left: App Name -->
-            <h4 class="m-0"><strong>LinkBOX</strong></h4>
+            <h3 class="m-0"><strong>LinkBOX</strong></h3>
 
             <!-- Center: Username -->
             {% if user.is_authenticated %}
+            <h4>
             <span class="mx-auto">Welcome, {{ user.username }}</span>
+            </h4>
             {% endif %}
 
             <!-- Right: Logout -->
@@ -173,7 +175,7 @@
 							<input type="hidden" id="url-id" name="url_id" /> <!-- for editing -->
 
 							<div class="mb-3">
-								<label for="url-textarea" class="form-label">Enter or paste your URL:</label>
+								<label for="url-textarea" class="form-label">*Enter or paste your URL:</label>
 								<textarea class="form-control" id="url-textarea" name="url" rows="2" placeholder="https://example.com" required></textarea>
 							</div>
 
@@ -207,7 +209,7 @@
 							</div>
 
 							<div class="mb-3">
-								<label for="tags" class="form-label">Tags (comma separated)</label>
+								<label for="tags" class="form-label">Tags (Optional) - Comma Separated</label>
 								<input type="text" class="form-control" id="tags" name="tags" placeholder="e.g. design, inspiration, vector">
 							</div>
 						</div>
@@ -307,8 +309,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	</div>
 
 <!-- URL Table Card (Updated Features) -->
-<div class="card shadow mt-5">
-    <div class="p-3">
+<div class="container-fluid mt-5">
+    <div class="p-3 border rounded-3 shadow-sm bg-white">
         <!-- FIX: Combined Search and Filter into a single form for robustness. -->
         <form method="get" name="myname">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -412,6 +414,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <!-- Pagination -->
         <div class="d-flex justify-content-between align-items-center">
+        <!-- Records per page selector -->
+        <div class="form-inline">
+            <label for="recordsPerPage" class="mr-2">Show</label>
+            <select id="recordsPerPage" class="form-control form-control-sm" onchange="updateRecordsPerPage(this)">
+                <option value="5" {% if show_n_records == 5 %}selected{% endif %}>5</option>
+                <option value="10" {% if show_n_records == 10 %}selected{% endif %}>10</option>
+                <option value="15" {% if show_n_records == 15 %}selected{% endif %}>15</option>
+                <option value="25" {% if show_n_records == 25 %}selected{% endif %}>25</option>
+            </select>
+            <span class="ml-2">records</span>
+        </div>
             <!-- Left: Remove button -->
             <button type="button" class="btn btn-sm btn-danger" onclick="removeSelected()">
                 Remove Selected
@@ -460,6 +473,15 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </div>
+<script>
+function updateRecordsPerPage(select) {
+    const value = select.value;
+    const url = new URL(window.location.href);
+    url.searchParams.set("show_n_records", value);
+    url.searchParams.set("page", 1);
+    window.location.href = url.toString();
+}
+</script>
 
 <!-- Export Popup Modal -->
 <div class="modal fade" id="exportModal" tabindex="-1" aria-hidden="true">

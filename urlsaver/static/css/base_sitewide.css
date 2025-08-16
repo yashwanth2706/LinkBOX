@@ -1,9 +1,9 @@
 body {
 	font-family: "Courier New", Courier, monospace;
-	background-color: #f8f9fa;
+	background-color: #F5F5DC;
 }
 .navbar {
-	background-color: #d1d5dc !important;
+	background-color: #d4d4d4 !important;
 	height: 60px;
 }
 .card {

@@ -921,12 +921,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		</script>
 		<script>
 			function openEditModal(urlId) {
-				fetch(`/get-url-details/${urlId}/`)
+				fetch(`/get_url_details/${urlId}/`)
 					.then(response => response.json())
 					.then(data => {
 						// Update modal fields
 						document.getElementById('addUrlModalLabel').textContent = 'Edit URL';
-						document.getElementById('urlForm').action = `/edit-url/${urlId}/`;
+						document.getElementById('urlForm').action = `/edit_url_view/${urlId}/`;
 						document.getElementById('url-id').value = data.id;
 						document.getElementById('url-textarea').value = data.url;
 						document.getElementById('name').value = data.name;

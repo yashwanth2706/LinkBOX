@@ -3,7 +3,7 @@ body {
 	background-color: #F5F5DC;
 }
 .navbar {
-	background-color: #d4d4d4 !important;
+	background-color: #000000 !important;
 	height: 60px;
 }
 .card {
@@ -14,3 +14,6 @@ body {
 textarea {
 	resize: none;
 }
+/*
+blue: #1a2a6c
+*/

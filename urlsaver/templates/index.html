@@ -92,12 +92,12 @@
     <nav class="navbar navbar-light bg-light">
         <div class="container d-flex align-items-center">
             <!-- Left: App Name -->
-            <h3 class="m-0"><strong>LinkBOX</strong></h3>
+            <h3 class="m-0"><strong style="color:white">LinkBOX</strong></h3>
 
             <!-- Center: Username -->
             {% if user.is_authenticated %}
             <h4>
-            <span class="mx-auto">Welcome, {{ user.username }}</span>
+            <span class="mx-auto" style="color:white">Welcome, {{ user.username }}</span>
             </h4>
             {% endif %}
 
@@ -105,7 +105,7 @@
             {% if user.is_authenticated %}
             <form action="{% url 'logout' %}" method="post" class="m-0">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-dark btn-sm">Logout</button>
+                <button type="submit" class="btn btn-light btn-sm">Logout</button>
             </form>
             {% endif %}
         </div>

@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- URL Table Card (Updated Features) -->
 <div class="container-fluid mt-5">
-    <div class="p-3 border rounded-3 shadow-sm bg-white">
+    <div class="p-3 border shadow-sm bg-white">
         <!-- FIX: Combined Search and Filter into a single form for robustness. -->
         <form method="get" name="myname">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -332,10 +332,54 @@ document.addEventListener('DOMContentLoaded', function() {
                     <!-- These buttons are not part of the form submission -->
                     <button class="btn btn-outline-secondary btn-sm" type="button" onclick="toggleFilters()">
                         Filters
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm" type="button" onclick="showExportPopup()">
-                        Export
-                    </button>
+            <div class="btn-group">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Export
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" onclick="exportSelected('csv')">Export Selected as CSV</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="exportSelected('pdf')">Export Selected as PDF</a></li>
+                </ul>
+            </div>
+    <script>
+    function exportSelected(type) {
+        const checkboxes = document.querySelectorAll(".row-checkbox:checked");
+        if (checkboxes.length === 0) {
+            showPopup("No URLs selected for export.", "red", true, 2000, "export-error");
+            return;
+        }
+
+    // Collect selected IDs
+    const selectedIds = [];
+    checkboxes.forEach(cb => selectedIds.push(cb.value));
+
+    // Create a form dynamically (so browser downloads the file normally)
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = type === "csv" ? "{% url 'export_selected_csv' %}" : "{% url 'export_selected_pdf' %}";
+
+    // Add CSRF token
+    const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const csrfInput = document.createElement("input");
+    csrfInput.type = "hidden";
+    csrfInput.name = "csrfmiddlewaretoken";
+    csrfInput.value = csrf;
+    form.appendChild(csrfInput);
+
+    // Add selected IDs
+    selectedIds.forEach(id => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "selected_urls[]";
+        input.value = id;
+        form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+}
+            </script>
                     <button class="btn btn-outline-danger btn-sm" type="button" onclick="showTrashPopup()">
                         Show Trash
                     </button>

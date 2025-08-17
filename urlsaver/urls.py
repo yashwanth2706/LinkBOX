@@ -14,4 +14,6 @@ urlpatterns = [
     path('edit_url_view/<int:url_id>/', views.edit_url_view, name='edit_url_view'),
     path('delete-selected/', views.delete_selected, name='delete_selected'),
     path('activity-data/', views.activity_data, name='activity_data'),
+    path("export/selected/csv/", views.export_selected_csv, name="export_selected_csv"),
+    path("export/selected/pdf/", views.export_selected_pdf, name="export_selected_pdf"),
 ]

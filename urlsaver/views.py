@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.utils.timezone import now
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.db.models import Q
@@ -13,6 +13,14 @@ from .forms import SignUpForm, LoginForm
 from .models import UrlEntry
 import json
 from django.core.paginator import Paginator
+import csv
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from io import BytesIO
 
 # -------- Auth views --------
 def signup_view(request):
@@ -190,3 +198,86 @@ def activity_data(request):
     trashed_url_count = UrlEntry.objects.filter(user=request.user, is_deleted=True).count()
     return JsonResponse({'total_url_count': total_url_count, 'trashed_url_count': trashed_url_count})
 
+@login_required
+def export_selected_csv(request):
+    if request.method == "POST":
+        ids = request.POST.getlist("selected_urls[]")  # AJAX sends as array
+        urls = UrlEntry.objects.filter(user=request.user, id__in=ids)
+
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="selected_urls.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(["Name", "URL", "Category", "Sub Category", "Tags"])
+
+        for url in urls:
+            writer.writerow([url.name, url.url, url.effective_category, url.sub_category, url.tags])
+
+        return response
+
+    return JsonResponse({"status": "error", "message": "Invalid request"}, status=400)
+
+@login_required
+def export_selected_pdf(request):
+    if request.method == "POST":
+        selected_ids = request.POST.getlist("selected_urls[]")
+
+        # Exclude deleted URLs
+        if selected_ids:
+            urls = UrlEntry.objects.filter(id__in=selected_ids, is_deleted=False, user=request.user)
+        else:
+            confirm_export = request.POST.get("confirm_export")
+            if confirm_export != "true":
+                return JsonResponse({"error": "no_selection", "message": "No URLs selected. Do you want to export all?"})
+            urls = UrlEntry.objects.filter(user=request.user, is_deleted=False)
+
+        if not urls.exists():
+            return JsonResponse({"error": "no_data", "message": "No URLs found to export."})
+
+        # Create PDF in memory
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=A4)
+        doc.title = "Selected URLs Export"
+        doc.author = request.user.username if request.user.is_authenticated else "LinkBOX"
+        doc.subject = "Exported URLs with categories and tags"
+        doc.keywords = ["urls", "export", "pdf", "linkbox"]
+        elements = []
+
+        styles = getSampleStyleSheet()
+        title = Paragraph("LinkBOX URL Export", styles["Heading1"])
+        elements.append(title)
+        elements.append(Spacer(1, 12))
+
+        # Table Data
+        data = [["Name", "URL", "Category", "Sub-Category", "Tags"]]
+        for url in urls:
+            data.append([
+                Paragraph(url.name or "-", styles["Normal"]),
+                Paragraph(f'<a href="{url.url}">{url.url}</a>', styles["Normal"]),
+                Paragraph(url.category or "-", styles["Normal"]),
+                Paragraph(url.sub_category or "-", styles["Normal"]),
+                Paragraph(url.tags or "-", styles["Normal"]),
+            ])
+
+        # Create Table
+        table = Table(data, repeatRows=1)
+        table.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+            ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+            ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+        ]))
+        elements.append(table)
+
+        # Build PDF
+        doc.build(elements)
+        buffer.seek(0)
+
+        # Return Response
+        response = HttpResponse(buffer, content_type="application/pdf")
+        response["Content-Disposition"] = 'attachment; filename="urls_export.pdf"'
+        return response
+    

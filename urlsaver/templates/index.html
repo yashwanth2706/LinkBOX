@@ -5,8 +5,12 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>LinkBOX</title>
+        <!-- Bootstrap -->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"/>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Driverjs -->
+        <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css"/>
 
         <!-- This div is important to check if bootstrap from CDN loaded or not -->
 		<div id="css-check" class="d-none"></div>
@@ -19,68 +23,46 @@
 		<script src="{% static 'js/popup_slidecard.js' %}"></script>
         <script src="{% static 'js/check_serverstatus.js' %}"></script>
 
-		<!-- Local bootstrap loaded debug script START -->
-		<script>
-			document.addEventListener('DOMContentLoaded', function () {
-				// --- CSS FALLBACK ---
-				const cssCheck = document.getElementById('css-check');
+    <script>
+        async function checkInternetAccess() {
+            try {
+                await fetch("https://www.google.com/favicon.ico", { mode: "no-cors" });
+                console.log("Internet access confirmed.");
+                return true;
+            } catch (error) {
+                console.log("No internet access:", error);
+                return false;
+            }
+        }
 
-				if (window.getComputedStyle(cssCheck).display !== 'none') {
-					console.warn('Bootstrap CSS from CDN failed. Loading local fallback...');
-					const link = document.createElement('link');
-					link.rel = 'stylesheet';
-					link.href = "{% static 'bootstrap-5.3.7-dist/css/bootstrap.min.css' %}";
+        (async () => {
+            const internetStatus = await checkInternetAccess();
+            if (!internetStatus) {
 
-					link.onload = function() {
-						console.log('✅ Local Bootstrap CSS has been loaded.');
-					};
-					link.onerror = function() {
-						console.error('Failed to load local Bootstrap CSS.');
-					};
+                // Load local bootstrap
+                const bootStrapLink = document.createElement("link");
+                bootStrapLink.rel = "stylesheet";
+                bootStrapLink.href = "{% static 'bootstrap-5.3.7-dist/css/bootstrap.min.css' %}";
+                document.head.appendChild(bootStrapLink);
 
-					document.head.appendChild(link);
-				} else {
-					console.log('✅ Bootstrap CSS from CDN loaded successfully.');
-				}
+                const bootStrapScript = document.createElement("script");
+                bootStrapScript.src = "{% static 'bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js' %}";
+                document.body.appendChild(bootStrapScript);
 
-				// --- JAVASCRIPT FALLBACK ---
-				function initializeBootstrapComponents() {
-					// Initialize your Bootstrap modal here, after Bootstrap is confirmed to be loaded
-					if (typeof bootstrap !== 'undefined') {
-						const trashModalEl = document.getElementById('trashModal');
-						if (trashModalEl) {
-							window.trashModal = new bootstrap.Modal(trashModalEl);
-							console.log('✅ Bootstrap Modal initialized successfully.');
-						}
-					} else {
-						console.error('Bootstrap is still not available after fallback attempt.');
-					}
-				}
+                // Load local driverjs
+                const driverLink = document.createElement("link");
+                driverLink.rel = "stylesheet";
+                driverLink.href = "{% static 'driver.js/dist/driver.css' %}";
+                document.head.appendChild(driverLink);
 
-				if (typeof bootstrap === 'undefined') {
-					console.warn('Bootstrap JS from CDN failed. Loading local fallback...');
-					const script = document.createElement('script');
-					script.src = "{% static 'bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js' %}";
+                const driverScript = document.createElement("script");
+                driverScript.src = "{% static 'driver.js/dist/driver.js.iife.js' %}";
+                document.body.appendChild(driverScript);
 
-					script.onload = function() {
-						console.log('✅ Local Bootstrap JS has been loaded.');
-						// Initialize Bootstrap components AFTER the local script loads
-						initializeBootstrapComponents();
-					};
-
-					script.onerror = function() {
-						console.error('Failed to load local Bootstrap JS.');
-					};
-
-					document.body.appendChild(script);
-				} else {
-					console.log('✅ Bootstrap JS from CDN loaded successfully.');
-					// Initialize Bootstrap components immediately if CDN loaded
-					initializeBootstrapComponents();
-				}
-			});
-		</script>
-		<!-- Local bootstrap loaded debug script END -->
+                console.log("Internet unavailable -> loaded local bootstrap and driverjs resources");
+            }
+        })();
+    </script>
 	</head>
 	<body>
 

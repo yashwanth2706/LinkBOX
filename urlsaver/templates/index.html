@@ -99,6 +99,50 @@
         <div id="popup-container" style="font-family: 'Calibri';"></div>
     </section>
     <!-- Popup section end -->
+<!-- Modal Popup for Preview START -->
+     <style>
+        /* Custom styling for the preview card image */
+        .preview-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #e9ecef;
+        }
+        
+        /* Custom styling for the description to limit lines */
+        .preview-description {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3; /* For Safari and older browsers */
+            line-clamp: 3; /* Standard property */
+            overflow: hidden;
+            height: 60px; /* Fallback height */
+        }
+    </style>
+ <!-- Bootstrap Modal for Preview -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" id="previewModalLabel">Link Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="card border-0">
+                    <img id="previewImage" class="card-img-top preview-card-img" alt="Link Preview Image" crossorigin="anonymous" onerror="this.style.display='none'; if(typeof showPopup === 'function') { showPopup('Image cannot be show in preview', 'orange', true, 3000, 'preview-partial'); }">
+                    <!--<img id="previewImage" src="" ... onerror="if(this.src) { this.style.display='none'; if(typeof showPopup === 'function') { showPopup('Image cannot be show in preview', 'orange', true, 3000, 'preview-partial'); } }">-->
+                    <!--<img id="previewImage" src="" class="card-img-top preview-card-img" alt="Link Preview Image" crossorigin="anonymous" onerror="this.style.display='none'; if(typeof showPopup === 'function') { showPopup('Image cannot be show in preview', 'orange', true, 3000, 'preview-partial'); }">-->
+                    <div class="card-body">
+                        <h5 id="previewTitle" class="card-title fw-bold text-truncate"></h5>
+                        <p id="previewDescription" class="card-text text-muted small preview-description"></p>
+                        <a id="previewUrl" href="#" target="_blank" rel="noopener noreferrer" class="text-primary small text-truncate d-block"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Popup for Preview END -->
 
 		<!-- Action Buttons -->
 		<div class="d-flex justify-content-center gap-3 mt-4">
@@ -417,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ url.sub_category }}</td>
                         <td>{{ url.tags }}</td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="showPopup('This feature is not implemented', 'darkblue' ,true, 2000, 'checkbox-test');">Preview</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary preview-btn" data-url="{{ url.url|escapejs }}">Preview</button>
                         </td>
                         <td>
                             <a target="_blank" rel="noopener noreferrer" href="{% url 'visit_url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
@@ -439,6 +483,130 @@ document.addEventListener('DOMContentLoaded', function() {
                 </table>
             </div>
         </form>
+<script>
+    // Wait for the document to be fully loaded before attaching event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // Get the Bootstrap Modal instance
+        const previewModalEl = document.getElementById('previewModal');
+        const previewModal = new bootstrap.Modal(previewModalEl);
+
+        // Get all the preview buttons
+        const previewButtons = document.querySelectorAll('.preview-btn');
+
+        // Attach a click event listener to each button
+        previewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.dataset.url; // Get the URL from the data-url attribute
+                generatePreview(url, this); // Pass the URL and the button itself to the function
+            });
+        });
+
+        // --- Core Link Preview Functions ---
+
+        /**
+         * Main function to generate the link preview.
+         * @param {string} url - The URL to preview.
+         * @param {HTMLElement} button - The button that was clicked.
+         */
+        async function generatePreview(url, button) {
+            if (!url) {
+                console.error("No URL provided for preview.");
+                return;
+            }
+
+            const originalButtonContent = button.innerHTML;
+            // Show a loading spinner inside the button
+            button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+            button.disabled = true;
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10-second timeout
+
+            try {
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                const response = await fetch(proxyUrl, { signal: controller.signal });
+                
+                clearTimeout(timeoutId);
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const data = await response.json();
+                const htmlContent = data.contents;
+                if (!htmlContent) throw new Error('Could not fetch the content of the URL.');
+
+                const metadata = parseMetadata(htmlContent, url);
+                updatePreviewCard(metadata);
+                previewModal.show();
+
+            } catch (error) {
+                let errorMessage = 'Failed to generate preview.';
+                if (error.name === 'AbortError') {
+                    errorMessage = 'Request timed out.';
+                }
+                // Use your existing popup function for errors
+                if (typeof showPopup === 'function') {
+                    showPopup(errorMessage, 'red', true, 3000, 'preview-error');
+                } else {
+                    alert(errorMessage); // Fallback alert
+                }
+                console.error('Error fetching or parsing URL:', error);
+            } finally {
+                // Restore the button to its original state
+                button.innerHTML = originalButtonContent;
+                button.disabled = false;
+            }
+        }
+
+        /**
+         * Updates the DOM elements of the preview card with the extracted metadata.
+         */
+        function updatePreviewCard(metadata) {
+            const previewImage = document.getElementById('previewImage');
+            const previewTitle = document.getElementById('previewTitle');
+            const previewDescription = document.getElementById('previewDescription');
+            const previewUrl = document.getElementById('previewUrl');
+
+            if (metadata.image) {
+                previewImage.src = metadata.image;
+                previewImage.style.display = 'block';
+            } else {
+                previewImage.style.display = 'none';
+            }
+
+            previewTitle.textContent = metadata.title;
+            previewDescription.textContent = metadata.description;
+            previewUrl.href = metadata.url;
+            previewUrl.textContent = new URL(metadata.url).hostname;
+        }
+
+        /**
+         * Parses the HTML content to extract metadata.
+         */
+        function parseMetadata(html, baseUrl) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            const getMetaTag = (name) => {
+                const element = doc.querySelector(`meta[property='og:${name}']`) || doc.querySelector(`meta[name='${name}']`);
+                return element ? element.getAttribute('content') : null;
+            };
+
+            const title = getMetaTag('title') || doc.querySelector('title')?.textContent || 'No Title Found';
+            const description = getMetaTag('description') || 'No Description Found';
+            let imageUrl = getMetaTag('image');
+
+            if (imageUrl) {
+                try {
+                    imageUrl = new URL(imageUrl, baseUrl).href;
+                } catch (e) {
+                    imageUrl = null;
+                }
+            }
+            return { title, description, image: imageUrl, url: baseUrl };
+        }
+    });
+</script>
 
         <!-- Pagination -->
         <div class="d-flex justify-content-between align-items-center">
@@ -723,7 +891,7 @@ document.addEventListener("DOMContentLoaded", function () {
 						document.getElementById('trashPagination').innerHTML = data.pagination_html;
 
 						// Show the modal
-						window.trashModal.show();
+						trashModal.show();
 					})
 					.catch(error => console.error('Error opening trash modal:', error));
 			}

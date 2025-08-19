@@ -280,4 +280,79 @@ def export_selected_pdf(request):
         response = HttpResponse(buffer, content_type="application/pdf")
         response["Content-Disposition"] = 'attachment; filename="urls_export.pdf"'
         return response
-    
+@login_required
+def export_all_pdf(request):
+    # Fetch all URLs for the logged-in user that are not deleted
+    urls = UrlEntry.objects.filter(user=request.user, is_deleted=False)
+
+    if not urls.exists():
+        return HttpResponse("No URLs found to export.", status=404)
+
+    # Create PDF in memory
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    doc.title = "All URLs Export"
+    doc.author = request.user.username
+    doc.subject = "Exported URLs with categories and tags"
+    doc.keywords = ["urls", "export", "pdf", "linkbox"]
+    elements = []
+
+    styles = getSampleStyleSheet()
+    title = Paragraph("LinkBOX URL Export - All URLs", styles["Heading1"])
+    elements.append(title)
+    elements.append(Spacer(1, 12))
+
+    # Table Data
+    data = [["Name", "URL", "Category", "Sub-Category", "Tags"]]
+    for url in urls:
+        data.append([
+            Paragraph(url.name or "-", styles["Normal"]),
+            Paragraph(f'<a href="{url.url}">{url.url}</a>', styles["Normal"]),
+            Paragraph(url.category or "-", styles["Normal"]),
+            Paragraph(url.sub_category or "-", styles["Normal"]),
+            Paragraph(url.tags or "-", styles["Normal"]),
+        ])
+
+    # Create Table
+    table = Table(data, repeatRows=1)
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+        ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+    ]))
+    elements.append(table)
+
+    # Build PDF
+    doc.build(elements)
+    buffer.seek(0)
+
+    # Return Response
+    response = HttpResponse(buffer, content_type="application/pdf")
+    response["Content-Disposition"] = 'attachment; filename="all_urls_export.pdf"'
+    return response
+
+@login_required
+def export_all_csv(request):
+    if request.method == "POST":
+        # Get all URLs for the logged-in user that are not deleted
+        urls = UrlEntry.objects.filter(user=request.user, is_deleted=False)
+
+        if not urls.exists():
+            return HttpResponse("No URLs found to export.", status=404)
+
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="all_urls.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(["Name", "URL", "Category", "Sub Category", "Tags"])
+
+        for url in urls:
+            writer.writerow([url.name, url.url, url.category, url.sub_category, url.tags])
+
+        return response
+
+    return HttpResponse("Invalid request method.", status=400)

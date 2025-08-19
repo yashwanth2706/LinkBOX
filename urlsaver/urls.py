@@ -16,4 +16,6 @@ urlpatterns = [
     path('activity-data/', views.activity_data, name='activity_data'),
     path("export/selected/csv/", views.export_selected_csv, name="export_selected_csv"),
     path("export/selected/pdf/", views.export_selected_pdf, name="export_selected_pdf"),
+    path("export/all/csv/", views.export_all_csv, name="export_all_csv"),
+    path("export/all/pdf/", views.export_all_pdf, name="export_all_pdf"),
 ]

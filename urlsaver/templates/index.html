@@ -454,9 +454,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Tags</th>
-                        <th>Preview</th>
-                        <th>Visit</th>
-                        <th>Edit</th>
+                        <th class="text-center">Preview</th>
+                        <th class="text-center">Visit</th>
+                        <th class="text-center">Edit</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -469,13 +469,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ url.effective_category }}</td>
                         <td>{{ url.sub_category }}</td>
                         <td>{{ url.tags }}</td>
-                        <td>
+                        <td class="text-center">
                     <button type="button" class="btn btn-sm btn-outline-secondary preview-btn" data-url="{{ url.url|escapejs }}">Preview</button>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <a target="_blank" rel="noopener noreferrer" href="{% url 'visit_url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <button type="button" class="btn btn-outline-dark btn-sm"
                                     onclick="openEditModal('{{ url.id }}', '{{ url.name|escapejs }}', '{{ url.url|escapejs }}', '{{ url.category }}', '{{ url.custom_category|escapejs }}', '{{ url.sub_category|escapejs }}', '{{ url.tags|escapejs }}')">
                                 Edit

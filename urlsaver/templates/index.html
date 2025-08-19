@@ -372,42 +372,51 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
     function exportSelected(type) {
         const checkboxes = document.querySelectorAll(".row-checkbox:checked");
+
+        // Determine form action URL
+        let actionUrl;
         if (checkboxes.length === 0) {
-            showPopup("No URLs selected for export.", "red", true, 2000, "export-error");
-            return;
+            const confirmExportAll = confirm("No URLs selected. Do you want to export all URLs?");
+            if (!confirmExportAll) {
+                showPopup("Export canceled", "red", true, 2000, "export-error");
+                return;
+            }
+            showPopup("Exporting all URLs...", "green", true, 2000, "export-success");
+            actionUrl = type === "csv" ? "{% url 'export_all_csv' %}" : "{% url 'export_all_pdf' %}";
+        } else {
+            // Some checkboxes selected
+            actionUrl = type === "csv" ? "{% url 'export_selected_csv' %}" : "{% url 'export_selected_pdf' %}";
         }
 
-    // Collect selected IDs
-    const selectedIds = [];
-    checkboxes.forEach(cb => selectedIds.push(cb.value));
+        // Create a form dynamically
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = actionUrl;
 
-    // Create a form dynamically (so browser downloads the file normally)
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = type === "csv" ? "{% url 'export_selected_csv' %}" : "{% url 'export_selected_pdf' %}";
+        // CSRF token
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfInput = document.createElement("input");
+        csrfInput.type = "hidden";
+        csrfInput.name = "csrfmiddlewaretoken";
+        csrfInput.value = csrf;
+        form.appendChild(csrfInput);
 
-    // Add CSRF token
-    const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const csrfInput = document.createElement("input");
-    csrfInput.type = "hidden";
-    csrfInput.name = "csrfmiddlewaretoken";
-    csrfInput.value = csrf;
-    form.appendChild(csrfInput);
+        // If exporting selected, add selected IDs
+        if (checkboxes.length > 0) {
+            checkboxes.forEach(cb => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "selected_urls[]";
+                input.value = cb.value;
+                form.appendChild(input);
+            });
+        }
 
-    // Add selected IDs
-    selectedIds.forEach(id => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "selected_urls[]";
-        input.value = id;
-        form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
-    form.remove();
-}
-            </script>
+        document.body.appendChild(form);
+        form.submit();
+        form.remove();
+    }
+    </script>
                     <button class="btn btn-outline-danger btn-sm" type="button" onclick="showTrashPopup()">
                         Show Trash
                     </button>
@@ -445,9 +454,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Tags</th>
-                        <th>Preview</th>
-                        <th>Visit</th>
-                        <th>Edit</th>
+                        <th class="text-center">Preview</th>
+                        <th class="text-center">Visit</th>
+                        <th class="text-center">Edit</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -460,13 +469,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ url.effective_category }}</td>
                         <td>{{ url.sub_category }}</td>
                         <td>{{ url.tags }}</td>
-                        <td>
+                        <td class="text-center">
                     <button type="button" class="btn btn-sm btn-outline-secondary preview-btn" data-url="{{ url.url|escapejs }}">Preview</button>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <a target="_blank" rel="noopener noreferrer" href="{% url 'visit_url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <button type="button" class="btn btn-outline-dark btn-sm"
                                     onclick="openEditModal('{{ url.id }}', '{{ url.name|escapejs }}', '{{ url.url|escapejs }}', '{{ url.category }}', '{{ url.custom_category|escapejs }}', '{{ url.sub_category|escapejs }}', '{{ url.tags|escapejs }}')">
                                 Edit

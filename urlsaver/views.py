@@ -211,7 +211,7 @@ def export_selected_csv(request):
         writer.writerow(["Name", "URL", "Category", "Sub Category", "Tags"])
 
         for url in urls:
-            writer.writerow([url.name, url.url, url.effective_category, url.sub_category, url.tags])
+            writer.writerow([url.name, url.url, url.category, url.sub_category, url.tags])
 
         return response
 

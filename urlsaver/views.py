@@ -21,6 +21,8 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
+from django.contrib.auth import views as auth_views
+from .forms import CustomAuthenticationForm
 
 # -------- Auth views --------
 def signup_view(request):
@@ -32,18 +34,20 @@ def signup_view(request):
             return redirect('index')
     else:
         form = SignUpForm()
-    return render(request, 'auth/signup.html', {'form': form})
+    return render(request, 'registration/signup.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
+        # Use your custom form here
+        form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('index')
+            return redirect('index') # Redirect to index after login
     else:
-        form = LoginForm()
-    return render(request, 'auth/login.html', {'form': form})
+        # And also here for GET requests
+        form = CustomAuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
 
 def logout_view(request):
     logout(request)

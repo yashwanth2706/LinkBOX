@@ -16,36 +16,38 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
-from urlsaver import views as app_views
-
+from django.contrib.auth import views as auth_views  # This is the correct import
+from urlsaver.forms import CustomPasswordResetForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    # Auth
-    path('signup/', app_views.signup_view, name='signup')
-    ,
-    path('login/', app_views.login_view, name='login'),
-    path('logout/', app_views.logout_view, name='logout'),
 
-    # Password reset flow (built-in views, our templates)
+    # Include all URLs from your 'urlsaver' app
+    path('', include('urlsaver.urls')),
+
+    # --- PASSWORD RESET FLOW ---
+    # CORRECT: Use 'auth_views' here
     path('password-reset/', auth_views.PasswordResetView.as_view(
-        template_name='auth/forgot_password.html',
-        email_template_name='auth/password_reset_email.html',
-        subject_template_name='auth/password_reset_subject.txt',
-        success_url='/password-reset/done/'
+        template_name='registration/password_reset_form.html',
+        email_template_name='registration/password_reset_email.html',
+        subject_template_name='registration/password_reset_subject.txt',
+        success_url='/password-reset/done/',
+        form_class=CustomPasswordResetForm,
     ), name='password_reset'),
+    
+    # CORRECT: Use 'auth_views' here
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(
-        template_name='auth/password_reset_done.html'
+        template_name='registration/password_reset_done.html'
     ), name='password_reset_done'),
+    
+    # CORRECT: Use 'auth_views' here
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
-        template_name='auth/password_reset_confirm.html',
+        template_name='registration/password_reset_confirm.html',
         success_url='/reset/done/'
     ), name='password_reset_confirm'),
+    
+    # CORRECT: Use 'auth_views' here
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
-        template_name='auth/password_reset_complete.html'
+        template_name='registration/password_reset_complete.html'
     ), name='password_reset_complete'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
-    path('', include('urlsaver.urls')),
 ]

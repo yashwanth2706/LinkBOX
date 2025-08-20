@@ -9,20 +9,20 @@ Assuming You have git installed in your system:
   `cd LinkBOX`
 
 - Linux/MacOS: \
-  In Terminal run below command \
+  In Terminal run below command 
   
   To create a virtual envirornment \
-  `python3 -m venv .venv` \
+  `python3 -m venv .venv` 
   
   To activate the virtual envirornment \
   `source .venv/bin/activate`
 
 - Windows: \
  In CMD run below command to set execution policy to current user \
-  `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` \
+  `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` 
   
  Create a virtual envirornment with below command \
-  `python -m venv .venv` \
+  `python -m venv .venv` 
   
   To activate the virtual envirornment \
   `. .venv\Scripts\activate` \
@@ -44,3 +44,4 @@ Assuming You have git installed in your system:
   
 - Open the project in webrowser: \
   `http://127.0.0.1:8000`
+

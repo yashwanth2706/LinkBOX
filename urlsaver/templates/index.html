@@ -394,6 +394,13 @@ document.getElementById("csvUploadForm").addEventListener("submit", function(e) 
         // Show modal (Bootstrap 5)
         let modal = new bootstrap.Modal(document.getElementById("importResultModal"));
         modal.show();
+
+        // Relaod page on modal close
+        document.getElementById("importResultModal")
+            .addEventListener("hidden.bs.modal", function () {
+                window.location.reload();
+            }, { once: true });
+
     })
     .catch(error => {
         console.error("Error:", error);

@@ -151,8 +151,14 @@
 					data-bs-toggle="modal"
 					data-bs-target="#addUrlModal"
 					>
-					+ Add URLs
+					+ Add URL
 			</button>
+            <button
+                class="btn btn-outline-dark btn-sm"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#csvUploadCanvas">
+                + Import URLs via CSV
+            </button>
 			<button
 					class="btn btn-outline-dark btn-sm"
 					data-bs-toggle="offcanvas"
@@ -160,12 +166,6 @@
 					>
 					Activity
 			</button>
-            <button
-                class="btn btn-outline-dark btn-sm"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#csvUploadCanvas">
-                + Add Links via CSV
-            </button>
 		</div>
 
 		<!-- Activity Offcanvas -->
@@ -394,6 +394,13 @@ document.getElementById("csvUploadForm").addEventListener("submit", function(e) 
         // Show modal (Bootstrap 5)
         let modal = new bootstrap.Modal(document.getElementById("importResultModal"));
         modal.show();
+
+        // Relaod page on modal close
+        document.getElementById("importResultModal")
+            .addEventListener("hidden.bs.modal", function () {
+                window.location.reload();
+            }, { once: true });
+
     })
     .catch(error => {
         console.error("Error:", error);

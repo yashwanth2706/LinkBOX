@@ -23,6 +23,9 @@ from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 from django.contrib.auth import views as auth_views
 from .forms import CustomAuthenticationForm
+import io
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 
 # -------- Auth views --------
 def signup_view(request):
@@ -31,7 +34,7 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('index')
+            return redirect('urlsaver:index')
     else:
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
@@ -43,7 +46,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('index') # Redirect to index after login
+            return redirect('urlsaver:index') # Redirect to index after login
     else:
         # And also here for GET requests
         form = CustomAuthenticationForm()
@@ -51,7 +54,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('urlsaver:login')
 
 # -------- App views (protected + per-user) --------
 @login_required
@@ -128,7 +131,7 @@ def delete_url(request, pk):
     url_entry.deleted_at = now()
     url_entry.save(update_fields=["is_deleted", "deleted_at"])
     messages.success(request, "URL deleted successfully.")
-    return redirect('index')
+    return redirect('urlsaver:index')
 
 @login_required
 def show_trash(request):
@@ -194,7 +197,7 @@ def delete_selected(request):
     ids = request.POST.getlist('selected_urls')
     if ids:
         UrlEntry.objects.filter(id__in=ids, user=request.user).update(is_deleted=True, deleted_at=now())
-    return redirect('index')
+    return redirect('urlsaver:index')
 
 @login_required
 def activity_data(request):
@@ -360,3 +363,62 @@ def export_all_csv(request):
         return response
 
     return HttpResponse("Invalid request method.", status=400)
+
+@login_required
+@require_POST
+def import_csv(request):
+    if not request.FILES.get("csv_file"):
+        return JsonResponse({"status": "error", "message": "No file uploaded"}, status=400)
+
+    csv_file = request.FILES["csv_file"]
+
+    # Validate extension
+    if not csv_file.name.endswith(".csv"):
+        return JsonResponse({"status": "error", "message": "Please upload a valid .csv file"}, status=400)
+
+    # Read CSV
+    data_set = csv_file.read().decode("UTF-8")
+    io_string = io.StringIO(data_set)
+    reader = csv.DictReader(io_string)
+
+    added, skipped = 0, 0
+    url_validator = URLValidator()
+
+    for row in reader:
+        raw_url = (row.get("URL") or "").strip()
+        if not raw_url:
+            continue  # skip empty rows
+
+        # Auto-fix if missing scheme (e.g. "google.com" → "https://google.com")
+        if not raw_url.startswith(("http://", "https://")):
+            raw_url = "https://" + raw_url
+
+        # Validate URL format
+        try:
+            url_validator(raw_url)
+        except ValidationError:
+            skipped += 1
+            continue
+
+        # Check for duplicate
+        if UrlEntry.objects.filter(user=request.user, url=raw_url, is_deleted=False).exists():
+            skipped += 1
+            continue
+
+        # Create new entry
+        UrlEntry.objects.create(
+            user=request.user,
+            name=row.get("Name", ""),
+            url=raw_url,
+            category=row.get("Category", ""),
+            sub_category=row.get("Sub Category", ""),
+            tags=row.get("Tags", ""),
+        )
+        added += 1
+
+    return JsonResponse({
+        "status": "success",
+        "added": added,
+        "skipped": skipped,
+        "message": f"Imported {added} URLs. Duplicate/Invalid URLs skipped: {skipped}"
+    })

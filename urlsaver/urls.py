@@ -3,6 +3,8 @@ from django.contrib.auth import views as auth_views
 from . import views
 from .forms import CustomAuthenticationForm
 
+app_name = "urlsaver"  
+
 urlpatterns = [
     # --- AUTHENTICATION URLS ---
     path('signup/', views.signup_view, name='signup'),
@@ -35,4 +37,5 @@ urlpatterns = [
     path("export/selected/pdf/", views.export_selected_pdf, name="export_selected_pdf"),
     path("export/all/csv/", views.export_all_csv, name="export_all_csv"),
     path("export/all/pdf/", views.export_all_pdf, name="export_all_pdf"),
+    path("import_csv/", views.import_csv, name="import_csv"),
 ]

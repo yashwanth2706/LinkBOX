@@ -7,7 +7,7 @@
 - 📌 Save and manage unlimited URLs  
 - 🏷️ Categorize and sub-categorize links for easy organization  
 - 🔍 Powerful search and filter options (by tag, category, subcategory)
-- 📊 Track most-visited links and trashed url numbers 
+- 📊 Track number of saved/trashed links 
 - 📑 Export saved URLs to **CSV, PDF**
 - ✏️ Edit options to update saved links anytime
 - 🖼️ Live site preview for quick access  
@@ -75,3 +75,4 @@ Feel free to open an issue or submit a pull request.
 
 ## 📜 License
 This project is licensed under the MIT License.
+

@@ -4,4 +4,4 @@
 4. Add landing page with Features, Login, Logout
 5. Need to check the best practices for managing users (Default django admin) or (Seprate user CRUD for managing users)
 6. Feature: Add top n visited links in activity panel with pagination (Need to decide if top n is fine or top 10 is okay)
-   
+7. Add Tour for the users to take a tour of the tool (Add a tour button after activity button to implement the feature) planning to implement with introjs

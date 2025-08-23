@@ -381,7 +381,7 @@ def import_csv(request):
     io_string = io.StringIO(data_set)
     reader = csv.DictReader(io_string)
 
-    added, skipped = 0, 0
+    added, skipped, restored = 0, 0, 0
     url_validator = URLValidator()
 
     for row in reader:
@@ -389,7 +389,7 @@ def import_csv(request):
         if not raw_url:
             continue  # skip empty rows
 
-        # Auto-fix if missing scheme (e.g. "google.com" → "https://google.com")
+        # Auto-fix scheme if missing
         if not raw_url.startswith(("http://", "https://")):
             raw_url = "https://" + raw_url
 
@@ -400,9 +400,17 @@ def import_csv(request):
             skipped += 1
             continue
 
-        # Check for duplicate
+        # If already active → skip
         if UrlEntry.objects.filter(user=request.user, url=raw_url, is_deleted=False).exists():
             skipped += 1
+            continue
+
+        # If in trash → restore instead of creating duplicate
+        trashed_entry = UrlEntry.objects.filter(user=request.user, url=raw_url, is_deleted=True).first()
+        if trashed_entry:
+            trashed_entry.is_deleted = False
+            trashed_entry.save(update_fields=['is_deleted'])
+            restored += 1
             continue
 
         # Create new entry
@@ -419,6 +427,7 @@ def import_csv(request):
     return JsonResponse({
         "status": "success",
         "added": added,
+        "restored": restored,
         "skipped": skipped,
-        "message": f"Imported {added} URLs. Duplicate/Invalid URLs skipped: {skipped}"
+        "message": f"Imported {added} new, {restored} restored from trash, {skipped} skipped."
     })

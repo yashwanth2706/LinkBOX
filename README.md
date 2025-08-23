@@ -45,3 +45,5 @@ Assuming You have git installed in your system:
 - Open the project in webrowser: \
   `http://127.0.0.1:8000`
 
+- Contribution guidelines: \
+  create a seprate branch on the feature you're working on and create a pullrequest

@@ -1,3 +1,27 @@
+# LinkBOX  
+
+**LinkBOX** is a simple and efficient **URL Manager** designed to help users save, organize, and manage their web links in one place. It provides features like categorization, tagging, search, and filtering, making it easier to keep track of important websites without cluttering your browser bookmarks.  
+
+## ✨ Features  
+
+- 📌 Save and manage unlimited URLs  
+- 🏷️ Categorize and sub-categorize links for easy organization  
+- 🔍 Powerful search and filter options (by tag, category, subcategory)
+- 📊 Track most-visited links and trashed url numbers 
+- 📑 Export saved URLs to **CSV, PDF**
+- ✏️ Edit options to update saved links anytime
+- 🖼️ Live site preview for quick access  
+- ♻️ Trash/Recycle Bin with **restore** and **delete options**  
+- 📱 Responsive UI built with **Bootstrap**  
+- ⚡ Backend powered by **Django**  
+
+## 🛠️ Tech Stack  
+
+- **Backend**: Django (Python)  
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap  
+- **Database**: PostgreSQL (or SQLite for development)  
+
+## Installation instructions:
 Assuming You have git installed in your system:
 
 - Create a Folder: \
@@ -45,5 +69,9 @@ Assuming You have git installed in your system:
 - Open the project in webrowser: \
   `http://127.0.0.1:8000`
 
-- Contribution guidelines: \
-  create a seprate branch on the feature you're working on and create a pullrequest
+## 🤝 Contributing
+Contributions, issues, and feature requests are welcome!
+Feel free to open an issue or submit a pull request.
+
+## 📜 License
+This project is licensed under the MIT License.

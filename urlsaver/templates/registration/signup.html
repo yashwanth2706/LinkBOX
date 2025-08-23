@@ -1,0 +1,34 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h4>Create a new account</h4>
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="error-message">
+        {{ form.non_field_errors|striptags }}
+      </div>
+    {% endif %}
+
+    {% for field in form %}
+      <div class="form-field">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.errors %}
+          <div class="error-message">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <button class="submit-btn" type="submit">Sign Up</button>
+  </form>
+  
+  <div class="form-footer">
+    <a href="{% url 'login' %}">Already have an account? Sign in</a>
+  </div>
+</div>
+{% endblock %}

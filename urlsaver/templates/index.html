@@ -85,7 +85,7 @@
 
             <!-- Right: Logout -->
             {% if user.is_authenticated %}
-            <form action="{% url 'logout' %}" method="post" class="m-0">
+            <form action="{% url 'urlsaver:logout' %}" method="post" class="m-0">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-light btn-sm">Logout</button>
             </form>
@@ -151,15 +151,21 @@
 					data-bs-toggle="modal"
 					data-bs-target="#addUrlModal"
 					>
-					+ Add URLs
+					+ Add URL
 			</button>
-				<button
-						class="btn btn-outline-dark btn-sm"
-						data-bs-toggle="offcanvas"
-						data-bs-target="#activityPanel"
-						>
-						Activity
-				</button>
+            <button
+                class="btn btn-outline-dark btn-sm"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#csvUploadCanvas">
+                + Import URLs via CSV
+            </button>
+			<button
+					class="btn btn-outline-dark btn-sm"
+					data-bs-toggle="offcanvas"
+					data-bs-target="#activityPanel"
+					>
+					Activity
+			</button>
 		</div>
 
 		<!-- Activity Offcanvas -->
@@ -195,7 +201,7 @@
 					</div>
 
 					<!-- We'll dynamically update `action` via JS -->
-					<form method="post" id="urlForm" action="{% url 'add_url' %}">
+					<form method="post" id="urlForm" action="{% url 'urlsaver:add_url' %}">
 						{% csrf_token %}
 						<div class="modal-body">
 							<input type="hidden" id="url-id" name="url_id" /> <!-- for editing -->
@@ -258,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
         urlForm.reset();
 
         // Reset form action back to default add URL endpoint
-        urlForm.action = "{% url 'add_url' %}";
+        urlForm.action = "{% url 'urlsaver:add_url' %}";
 
         // Reset hidden ID field
         document.getElementById("url-id").value = "";
@@ -334,6 +340,76 @@ document.addEventListener('DOMContentLoaded', function() {
 		</div>
 	</div>
 
+<!-- Import via CSV START -->
+
+<!-- Offcanvas for CSV Upload -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="csvUploadCanvas">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Upload CSV</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form id="csvUploadForm" method="post" enctype="multipart/form-data" action="{% url 'urlsaver:import_csv' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="csvFile" class="form-label">Choose CSV file</label>
+            <input class="form-control" type="file" name="csv_file" id="csvFile" accept=".csv" required>
+        </div>
+        <button type="submit" class="btn btn-dark">Upload</button>
+    </form>
+  </div>
+</div>
+
+<!-- Import result modal -->
+<div class="modal fade" id="importResultModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Import Result</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="importResultMessage">
+        <!-- Message will be injected here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById("csvUploadForm").addEventListener("submit", function(e) {
+    e.preventDefault();  // Stop normal form submission
+
+    let formData = new FormData(this);
+
+    fetch(this.action, {
+        method: "POST",
+        body: formData,
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Insert server response into modal
+        document.getElementById("importResultMessage").innerText = data.message;
+
+        // Show modal (Bootstrap 5)
+        let modal = new bootstrap.Modal(document.getElementById("importResultModal"));
+        modal.show();
+
+        // Relaod page on modal close
+        document.getElementById("importResultModal")
+            .addEventListener("hidden.bs.modal", function () {
+                window.location.reload();
+            }, { once: true });
+
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+});
+</script>
+
+<!-- Import via CSV END -->
+
 <!-- URL Table Card (Updated Features) -->
 <div class="container-fluid mt-5">
     <div class="p-3 border shadow-sm bg-white">
@@ -372,42 +448,51 @@ document.addEventListener('DOMContentLoaded', function() {
     <script>
     function exportSelected(type) {
         const checkboxes = document.querySelectorAll(".row-checkbox:checked");
+
+        // Determine form action URL
+        let actionUrl;
         if (checkboxes.length === 0) {
-            showPopup("No URLs selected for export.", "red", true, 2000, "export-error");
-            return;
+            const confirmExportAll = confirm("No URLs selected. Do you want to export all URLs?");
+            if (!confirmExportAll) {
+                showPopup("Export canceled", "red", true, 2000, "export-error");
+                return;
+            }
+            showPopup("Exporting all URLs...", "green", true, 2000, "export-success");
+            actionUrl = type === "csv" ? "{% url 'urlsaver:export_all_csv' %}" : "{% url 'urlsaver:export_all_pdf' %}";
+        } else {
+            // Some checkboxes selected
+            actionUrl = type === "csv" ? "{% url 'urlsaver:export_selected_csv' %}" : "{% url 'urlsaver:export_selected_pdf' %}";
         }
 
-    // Collect selected IDs
-    const selectedIds = [];
-    checkboxes.forEach(cb => selectedIds.push(cb.value));
+        // Create a form dynamically
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = actionUrl;
 
-    // Create a form dynamically (so browser downloads the file normally)
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = type === "csv" ? "{% url 'export_selected_csv' %}" : "{% url 'export_selected_pdf' %}";
+        // CSRF token
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfInput = document.createElement("input");
+        csrfInput.type = "hidden";
+        csrfInput.name = "csrfmiddlewaretoken";
+        csrfInput.value = csrf;
+        form.appendChild(csrfInput);
 
-    // Add CSRF token
-    const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const csrfInput = document.createElement("input");
-    csrfInput.type = "hidden";
-    csrfInput.name = "csrfmiddlewaretoken";
-    csrfInput.value = csrf;
-    form.appendChild(csrfInput);
+        // If exporting selected, add selected IDs
+        if (checkboxes.length > 0) {
+            checkboxes.forEach(cb => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "selected_urls[]";
+                input.value = cb.value;
+                form.appendChild(input);
+            });
+        }
 
-    // Add selected IDs
-    selectedIds.forEach(id => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "selected_urls[]";
-        input.value = id;
-        form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
-    form.remove();
-}
-            </script>
+        document.body.appendChild(form);
+        form.submit();
+        form.remove();
+    }
+    </script>
                     <button class="btn btn-outline-danger btn-sm" type="button" onclick="showTrashPopup()">
                         Show Trash
                     </button>
@@ -433,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </form>
 
         <!-- This form for bulk actions remains separate because it uses POST -->
-        <form id="bulkDeleteForm" method="post" action="{% url 'delete_selected' %}">
+        <form id="bulkDeleteForm" method="post" action="{% url 'urlsaver:delete_selected' %}">
             {% csrf_token %}
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
@@ -445,9 +530,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <th>Category</th>
                         <th>Sub Category</th>
                         <th>Tags</th>
-                        <th>Preview</th>
-                        <th>Visit</th>
-                        <th>Edit</th>
+                        <th class="text-center">Preview</th>
+                        <th class="text-center">Visit</th>
+                        <th class="text-center">Edit</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -460,13 +545,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>{{ url.effective_category }}</td>
                         <td>{{ url.sub_category }}</td>
                         <td>{{ url.tags }}</td>
-                        <td>
+                        <td class="text-center">
                     <button type="button" class="btn btn-sm btn-outline-secondary preview-btn" data-url="{{ url.url|escapejs }}">Preview</button>
                         </td>
-                        <td>
-                            <a target="_blank" rel="noopener noreferrer" href="{% url 'visit_url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
+                        <td class="text-center">
+                            <a target="_blank" rel="noopener noreferrer" href="{% url 'urlsaver:visit_url' url.id %}" class="btn btn-sm btn-primary">Visit</a>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <button type="button" class="btn btn-outline-dark btn-sm"
                                     onclick="openEditModal('{{ url.id }}', '{{ url.name|escapejs }}', '{{ url.url|escapejs }}', '{{ url.category }}', '{{ url.custom_category|escapejs }}', '{{ url.sub_category|escapejs }}', '{{ url.tags|escapejs }}')">
                                 Edit
@@ -761,7 +846,7 @@ function updateRecordsPerPage(select) {
     // This function runs when the page has finished loading
     document.addEventListener('DOMContentLoaded', function() {
         // Fetch data from the new URL
-        fetch("{% url 'activity_data' %}")
+        fetch("{% url 'urlsaver:activity_data' %}")
             .then(response => response.json())
             .then(data => {
                 // Update the HTML elements with the data from the view
@@ -786,7 +871,7 @@ document.addEventListener("DOMContentLoaded", function () {
         urlForm.reset();
 
         // Reset form action back to default add URL endpoint
-        urlForm.action = "{% url 'add_url' %}";
+        urlForm.action = "{% url 'urlsaver:add_url' %}";
 
         // Reset hidden ID field
         document.getElementById("url-id").value = "";

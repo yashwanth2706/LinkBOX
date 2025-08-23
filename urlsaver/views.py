@@ -21,6 +21,11 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
+from django.contrib.auth import views as auth_views
+from .forms import CustomAuthenticationForm
+import io
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 
 # -------- Auth views --------
 def signup_view(request):
@@ -29,25 +34,27 @@ def signup_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('index')
+            return redirect('urlsaver:index')
     else:
         form = SignUpForm()
-    return render(request, 'auth/signup.html', {'form': form})
+    return render(request, 'registration/signup.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
+        # Use your custom form here
+        form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('index')
+            return redirect('urlsaver:index') # Redirect to index after login
     else:
-        form = LoginForm()
-    return render(request, 'auth/login.html', {'form': form})
+        # And also here for GET requests
+        form = CustomAuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('urlsaver:login')
 
 # -------- App views (protected + per-user) --------
 @login_required
@@ -124,7 +131,7 @@ def delete_url(request, pk):
     url_entry.deleted_at = now()
     url_entry.save(update_fields=["is_deleted", "deleted_at"])
     messages.success(request, "URL deleted successfully.")
-    return redirect('index')
+    return redirect('urlsaver:index')
 
 @login_required
 def show_trash(request):
@@ -190,7 +197,7 @@ def delete_selected(request):
     ids = request.POST.getlist('selected_urls')
     if ids:
         UrlEntry.objects.filter(id__in=ids, user=request.user).update(is_deleted=True, deleted_at=now())
-    return redirect('index')
+    return redirect('urlsaver:index')
 
 @login_required
 def activity_data(request):
@@ -280,4 +287,147 @@ def export_selected_pdf(request):
         response = HttpResponse(buffer, content_type="application/pdf")
         response["Content-Disposition"] = 'attachment; filename="urls_export.pdf"'
         return response
-    
+@login_required
+def export_all_pdf(request):
+    # Fetch all URLs for the logged-in user that are not deleted
+    urls = UrlEntry.objects.filter(user=request.user, is_deleted=False)
+
+    if not urls.exists():
+        return HttpResponse("No URLs found to export.", status=404)
+
+    # Create PDF in memory
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
+    doc.title = "All URLs Export"
+    doc.author = request.user.username
+    doc.subject = "Exported URLs with categories and tags"
+    doc.keywords = ["urls", "export", "pdf", "linkbox"]
+    elements = []
+
+    styles = getSampleStyleSheet()
+    title = Paragraph("LinkBOX URL Export - All URLs", styles["Heading1"])
+    elements.append(title)
+    elements.append(Spacer(1, 12))
+
+    # Table Data
+    data = [["Name", "URL", "Category", "Sub-Category", "Tags"]]
+    for url in urls:
+        data.append([
+            Paragraph(url.name or "-", styles["Normal"]),
+            Paragraph(f'<a href="{url.url}">{url.url}</a>', styles["Normal"]),
+            Paragraph(url.category or "-", styles["Normal"]),
+            Paragraph(url.sub_category or "-", styles["Normal"]),
+            Paragraph(url.tags or "-", styles["Normal"]),
+        ])
+
+    # Create Table
+    table = Table(data, repeatRows=1)
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+        ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+        ("GRID", (0, 0), (-1, -1), 0.5, colors.black),
+    ]))
+    elements.append(table)
+
+    # Build PDF
+    doc.build(elements)
+    buffer.seek(0)
+
+    # Return Response
+    response = HttpResponse(buffer, content_type="application/pdf")
+    response["Content-Disposition"] = 'attachment; filename="all_urls_export.pdf"'
+    return response
+
+@login_required
+def export_all_csv(request):
+    if request.method == "POST":
+        # Get all URLs for the logged-in user that are not deleted
+        urls = UrlEntry.objects.filter(user=request.user, is_deleted=False)
+
+        if not urls.exists():
+            return HttpResponse("No URLs found to export.", status=404)
+
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="all_urls.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(["Name", "URL", "Category", "Sub Category", "Tags"])
+
+        for url in urls:
+            writer.writerow([url.name, url.url, url.category, url.sub_category, url.tags])
+
+        return response
+
+    return HttpResponse("Invalid request method.", status=400)
+
+@login_required
+@require_POST
+def import_csv(request):
+    if not request.FILES.get("csv_file"):
+        return JsonResponse({"status": "error", "message": "No file uploaded"}, status=400)
+
+    csv_file = request.FILES["csv_file"]
+
+    # Validate extension
+    if not csv_file.name.endswith(".csv"):
+        return JsonResponse({"status": "error", "message": "Please upload a valid .csv file"}, status=400)
+
+    # Read CSV
+    data_set = csv_file.read().decode("UTF-8")
+    io_string = io.StringIO(data_set)
+    reader = csv.DictReader(io_string)
+
+    added, skipped, restored = 0, 0, 0
+    url_validator = URLValidator()
+
+    for row in reader:
+        raw_url = (row.get("URL") or "").strip()
+        if not raw_url:
+            continue  # skip empty rows
+
+        # Auto-fix scheme if missing
+        if not raw_url.startswith(("http://", "https://")):
+            raw_url = "https://" + raw_url
+
+        # Validate URL format
+        try:
+            url_validator(raw_url)
+        except ValidationError:
+            skipped += 1
+            continue
+
+        # If already active → skip
+        if UrlEntry.objects.filter(user=request.user, url=raw_url, is_deleted=False).exists():
+            skipped += 1
+            continue
+
+        # If in trash → restore instead of creating duplicate
+        trashed_entry = UrlEntry.objects.filter(user=request.user, url=raw_url, is_deleted=True).first()
+        if trashed_entry:
+            trashed_entry.is_deleted = False
+            trashed_entry.save(update_fields=['is_deleted'])
+            restored += 1
+            continue
+
+        # Create new entry
+        UrlEntry.objects.create(
+            user=request.user,
+            name=row.get("Name", ""),
+            url=raw_url,
+            category=row.get("Category", ""),
+            sub_category=row.get("Sub Category", ""),
+            tags=row.get("Tags", ""),
+        )
+        added += 1
+
+    return JsonResponse({
+        "status": "success",
+        "added": added,
+        "restored": restored,
+        "skipped": skipped,
+        "message": f"Imported {added} new, {restored} restored from trash, {skipped} skipped."
+    })

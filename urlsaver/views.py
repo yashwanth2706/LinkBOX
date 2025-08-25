@@ -27,6 +27,14 @@ import io
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
+# Landing Page
+def landing_page_view(request):
+    """
+    Renders the public landing page.
+    This view is for users who are NOT logged in.
+    """
+    return render(request, 'linkbox.html')
+
 # -------- Auth views --------
 def signup_view(request):
     if request.method == 'POST':

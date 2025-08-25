@@ -21,7 +21,8 @@ urlpatterns = [
     ), name='logout'),
 
     # --- APP URLS ---
-    path('', views.index, name='index'),
+    path('', views.landing_page_view, name='landing_page'),
+    path('index/', views.index, name='index'),
     path('visit/<int:pk>/', views.visit_url, name='visit_url'),
     path('add/', views.add_url, name='add_url'),
     path('delete/<int:pk>/', views.delete_url, name='delete_url'),

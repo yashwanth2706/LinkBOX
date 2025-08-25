@@ -1,0 +1,788 @@
+[
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "admin",
+        "model": "logentry"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "auth",
+        "model": "permission"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "auth",
+        "model": "group"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "auth",
+        "model": "user"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "contenttypes",
+        "model": "contenttype"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "sessions",
+        "model": "session"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "fields": {
+        "app_label": "urlsaver",
+        "model": "urlentry"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "cmsoebhj0o8vc6imyfodhmdxkb016kjv",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlmJN3a8lPScIdqPTQLIlvKpEHeHSCmgfTPzXmagbR2HbUnzMKk5m9acfjcmeaSyA71TuVUrtazzxHZX7EEXe62anpfD_TsYaRm_NaM47SP65IEFEAkZcut7JyH2UVldyCkAdJJdA-QpZg25w-QCS4Pm_QHpbzgh:1un9Rr:Tupx03hyiUlBWKS3vd8PgrvNFslWToTXwucxBsoKzpg",
+        "expire_date": "2025-08-30T05:27:23.551Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "f3zxa5ezlipyfztoc5jo3uasuw1v036x",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlmJN3a8lPScIdqPTQLIlvKpEHeHSCmgfTPzXmagbR2HbUnzMKk5m9acfjcmeaSyA71TuVUrtazzxHZX7EEXe62anpfD_TsYaRm_NaM47SP65IEFEAkZcut7JyH2UVldyCkAdJJdA-QpZg25w-QCS4Pm_QHpbzgh:1unTkK:J2lYrEYpuuRZddLmPn4mxNCN72UIyHDq05ZxKUQgT-c",
+        "expire_date": "2025-08-31T03:07:48.425Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "mj6sjab99x1f7pxyuyhixrueo0lwjd5f",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlmJN3a8lPScIdqPTQLIlvKpEHeHSCmgfTPzXmagbR2HbUnzMKk5m9acfjcmeaSyA71TuVUrtazzxHZX7EEXe62anpfD_TsYaRm_NaM47SP65IEFEAkZcut7JyH2UVldyCkAdJJdA-QpZg25w-QCS4Pm_QHpbzgh:1un4Ei:NuBNPV5fZhhAi-htkRuqVLOcAuSXt1OPRMMIBnwp230",
+        "expire_date": "2025-08-29T23:53:28.350Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "r2hv8aanjk3ct1qt5446copl5ilg303l",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlmJN3a8lPScIdqPTQLIlvKpEHeHSCmgfTPzXmagbR2HbUnzMKk5m9acfjcmeaSyA71TuVUrtazzxHZX7EEXe62anpfD_TsYaRm_NaM47SP65IEFEAkZcut7JyH2UVldyCkAdJJdA-QpZg25w-QCS4Pm_QHpbzgh:1uofen:R1KBK9-UPX-tFny-IsUMlUjBdXAIpgAfIu1nweclKbU",
+        "expire_date": "2025-09-03T10:03:01.997Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "tkdp6gizbbmu1126fh2v3jc8sb9eco9n",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlmJN3a8lPScIdqPTQLIlvKpEHeHSCmgfTPzXmagbR2HbUnzMKk5m9acfjcmeaSyA71TuVUrtazzxHZX7EEXe62anpfD_TsYaRm_NaM47SP65IEFEAkZcut7JyH2UVldyCkAdJJdA-QpZg25w-QCS4Pm_QHpbzgh:1unqeg:2yCu43YwYpY8bDdoPcc0GUQ-Pvd-AyBg44-cqMDpmqw",
+        "expire_date": "2025-09-01T03:35:30.839Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ufshkzxbw9cdhi8k76hgz5iwmfujmfj2",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlmJN3a8lPScIdqPTQLIlvKpEHeHSCmgfTPzXmagbR2HbUnzMKk5m9acfjcmeaSyA71TuVUrtazzxHZX7EEXe62anpfD_TsYaRm_NaM47SP65IEFEAkZcut7JyH2UVldyCkAdJJdA-QpZg25w-QCS4Pm_QHpbzgh:1uogZD:Yr1Xtjj19dyQiwGgt4PJHcR7HIdoB0gAGOTzGMlMxGI",
+        "expire_date": "2025-09-03T11:01:19.461Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "w05wfkidiart5gil7vxmcbvji1bwvlwd",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQBe_iGlmJN3a8lPScIdqPTQLIlvKpEHeHSCmgfTPzXmagbR2HbUnzMKk5m9acfjcmeaSyA71TuVUrtazzxHZX7EEXe62anpfD_TsYaRm_NaM47SP65IEFEAkZcut7JyH2UVldyCkAdJJdA-QpZg25w-QCS4Pm_QHpbzgh:1upjXx:hQgBtIaJxdVZSRryzkZx2FMG8L9AOzHgVx1rmZOMfWc",
+        "expire_date": "2025-09-06T08:24:21.770Z"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "add_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "change_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "delete_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view log entry",
+        "content_type": [
+            "admin",
+            "logentry"
+        ],
+        "codename": "view_logentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "add_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "change_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "delete_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view permission",
+        "content_type": [
+            "auth",
+            "permission"
+        ],
+        "codename": "view_permission"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "add_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "change_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "delete_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view group",
+        "content_type": [
+            "auth",
+            "group"
+        ],
+        "codename": "view_group"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add user",
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "add_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change user",
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "change_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete user",
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "delete_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view user",
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "codename": "view_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "add_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "change_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "delete_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view content type",
+        "content_type": [
+            "contenttypes",
+            "contenttype"
+        ],
+        "codename": "view_contenttype"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "add_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "change_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "delete_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view session",
+        "content_type": [
+            "sessions",
+            "session"
+        ],
+        "codename": "view_session"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add url entry",
+        "content_type": [
+            "urlsaver",
+            "urlentry"
+        ],
+        "codename": "add_urlentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change url entry",
+        "content_type": [
+            "urlsaver",
+            "urlentry"
+        ],
+        "codename": "change_urlentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete url entry",
+        "content_type": [
+            "urlsaver",
+            "urlentry"
+        ],
+        "codename": "delete_urlentry"
+    }
+},
+{
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view url entry",
+        "content_type": [
+            "urlsaver",
+            "urlentry"
+        ],
+        "codename": "view_urlentry"
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$tFt3wHueEWvWCUS3ZCwo1q$B85v+w4+c8at8r8JxFyrTKlaqw//XGmQn6fjtxYe/og=",
+        "last_login": "2025-08-23T08:24:21.761Z",
+        "is_superuser": true,
+        "username": "yash1",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-08-15T11:25:16.388Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$PbcCKPwPwI4zXnsZAiia3N$kbsfqMeFRJARjjcIBbMWEhO6gEQXHjuYF7b6THxpQic=",
+        "last_login": "2025-08-20T10:54:24.500Z",
+        "is_superuser": false,
+        "username": "testuser",
+        "first_name": "",
+        "last_name": "",
+        "email": "testuser@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-08-20T10:53:20.712Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$zaLti14BznG7ZNzsj43prC$7bwoaNa9uIsoHkey8k3k0tONDaIQajHvfIOL9FLTMhk=",
+        "last_login": "2025-08-20T10:57:56.856Z",
+        "is_superuser": true,
+        "username": "yash1anth",
+        "first_name": "",
+        "last_name": "",
+        "email": "yash1anth@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-08-20T10:57:15.834Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2025-08-20T10:59:13.007Z",
+        "user": [
+            "yash1anth"
+        ],
+        "content_type": [
+            "auth",
+            "user"
+        ],
+        "object_id": "2",
+        "object_repr": "testman",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 10,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "OpenAI",
+        "url": "https://chatgpt.com",
+        "category": "website",
+        "custom_category": "",
+        "sub_category": "AI",
+        "tags": "chat, gpt, llm",
+        "visit_count": 1,
+        "created_at": "2025-08-16T14:15:02.075Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 11,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "Perplexity",
+        "url": "https://www.perplexity.ai/",
+        "category": "website",
+        "custom_category": "",
+        "sub_category": "AI",
+        "tags": "research, analisys, llm",
+        "visit_count": 0,
+        "created_at": "2025-08-16T14:17:43.365Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 12,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "htmlcolorcodes",
+        "url": "https://htmlcolorcodes.com",
+        "category": "website",
+        "custom_category": "",
+        "sub_category": "color picker",
+        "tags": "color_codes, color_picker",
+        "visit_count": 0,
+        "created_at": "2025-08-16T14:18:46.410Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 13,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "Canva",
+        "url": "https://www.canva.com/templates/?category=tAGgXftC39c",
+        "category": "website",
+        "custom_category": "",
+        "sub_category": "Design",
+        "tags": "design, ppt",
+        "visit_count": 0,
+        "created_at": "2025-08-16T14:21:03.976Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 14,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Main_Page",
+        "category": "website",
+        "custom_category": "localhost",
+        "sub_category": "Encyclopedia",
+        "tags": "Research, Encyclopedia",
+        "visit_count": 0,
+        "created_at": "2025-08-16T14:23:00.606Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 19,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "Django",
+        "url": "https://www.djangoproject.com/community/logos/",
+        "category": "others",
+        "custom_category": "Django",
+        "sub_category": "Framework",
+        "tags": "Backend, Python, Webdev",
+        "visit_count": 0,
+        "created_at": "2025-08-19T06:36:28.775Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 20,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "ProfilemeDev",
+        "url": "https://www.profileme.dev/",
+        "category": "website",
+        "custom_category": "",
+        "sub_category": "Profile Builder",
+        "tags": "Github, Profile",
+        "visit_count": 0,
+        "created_at": "2025-08-19T07:16:20.158Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 21,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "Github",
+        "url": "https://docs.github.com/en/get-started/learning-to-code/getting-started-with-git",
+        "category": "others",
+        "custom_category": "Github",
+        "sub_category": "VCS",
+        "tags": "repository, code_management",
+        "visit_count": 0,
+        "created_at": "2025-08-20T02:10:05.039Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 22,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "Claude",
+        "url": "https://www.anthropic.com/claude-code",
+        "category": "website",
+        "custom_category": "",
+        "sub_category": "",
+        "tags": "LLM, AI",
+        "visit_count": 0,
+        "created_at": "2025-08-20T02:12:57.246Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 31,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "localhost",
+        "url": "http://127.0.0.1:8000/",
+        "category": "devlopment",
+        "custom_category": "",
+        "sub_category": "testing",
+        "tags": "django, portfolio",
+        "visit_count": 0,
+        "created_at": "2025-08-23T11:13:38.559Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 32,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "Youtube",
+        "url": "https://youtube.com",
+        "category": "youtube",
+        "custom_category": "",
+        "sub_category": "",
+        "tags": "",
+        "visit_count": 0,
+        "created_at": "2025-08-23T11:14:42.488Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 44,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "Rickrol",
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUHcmlja3JvbA%3D%3D",
+        "category": "youtube",
+        "custom_category": "",
+        "sub_category": "music video",
+        "tags": "dance, song",
+        "visit_count": 1,
+        "created_at": "2025-08-23T11:23:55.707Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 45,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "Google",
+        "url": "https://www.google.com",
+        "category": "search",
+        "custom_category": "",
+        "sub_category": "engine",
+        "tags": "tech, utility",
+        "visit_count": 0,
+        "created_at": "2025-08-23T11:30:22.371Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 46,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "YouTube",
+        "url": "https://www.youtube.com",
+        "category": "entertainment",
+        "custom_category": "",
+        "sub_category": "video",
+        "tags": "streaming, media",
+        "visit_count": 0,
+        "created_at": "2025-08-23T11:30:22.382Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 47,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "GitHub",
+        "url": "https://github.com",
+        "category": "development",
+        "custom_category": "",
+        "sub_category": "repository",
+        "tags": "code, open-source",
+        "visit_count": 2,
+        "created_at": "2025-08-23T11:30:22.391Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+},
+{
+    "model": "urlsaver.urlentry",
+    "pk": 48,
+    "fields": {
+        "user": [
+            "yash1"
+        ],
+        "name": "StackOverflow",
+        "url": "https://stackoverflow.com",
+        "category": "development",
+        "custom_category": "",
+        "sub_category": "community",
+        "tags": "qa, programming",
+        "visit_count": 2,
+        "created_at": "2025-08-23T11:30:22.402Z",
+        "is_deleted": false,
+        "deleted_at": null
+    }
+}
+]

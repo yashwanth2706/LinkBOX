@@ -73,10 +73,20 @@ WSGI_APPLICATION = 'urlmanager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'urls',         
+        'USER': 'postgres',
+        'PASSWORD': 'y@sH1800',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -123,9 +133,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'index'         
-#LOGOUT_REDIRECT_URL = 'login'
-LOGOUT_REDIRECT_URL = '/'        
+LOGIN_REDIRECT_URL = 'urlsaver:index'         
+LOGOUT_REDIRECT_URL = 'urlsaver:landing_page'        
 
 # Dev-only: emails print to console
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

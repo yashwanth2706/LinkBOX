@@ -1,13 +1,17 @@
- {
-  "builds": [{
+{
+  "version": 2,
+  "builds": [
+    {
       "src": "urlmanager/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
-  }],
+    }
+  ],
   "routes": [
-      {
-          "src": "/(.*)",
-          "dest": "urlmanager/wsgi.py"
-      }
-  ]
+    {
+      "src": "/(.*)",
+      "dest": "urlmanager/wsgi.py"
+    }
+  ],
+  "buildCommand": "bash build_files.sh"
 }

@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "bash build_files.sh",
   "builds": [
     {
       "src": "urlmanager/wsgi.py",
@@ -14,6 +15,5 @@
   "routes": [
     { "src": "/static/(.*)", "dest": "/staticfiles/$1" },
     { "src": "/(.*)", "dest": "urlmanager/wsgi.py" }
-  ],
-  "buildCommand": "bash build_files.sh"
+  ]
 }

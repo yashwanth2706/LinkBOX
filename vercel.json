@@ -7,10 +7,5 @@
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
     }
   ],
-  "routes": [
-    { "src": "/static/(.*)", "dest": "/staticfiles/$1" },
-    { "src": "/(.*)", "dest": "urlmanager/wsgi.py" }
-  ],
-  "buildCommand": "bash build_files.sh",
-  "outputDirectory": "staticfiles"
+  "buildCommand": "bash build_files.sh"
 }

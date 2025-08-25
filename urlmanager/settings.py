@@ -84,28 +84,28 @@ WSGI_APPLICATION = 'urlmanager.wsgi.application'
 #    }
 #}
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'urls',         
-#        'USER': 'postgres',
-#        'PASSWORD': 'y@sH1800',
-#        'HOST': 'localhost',
-#        'PORT': '5432',
-#    }
-#}
-
-# database config for vercel
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+       'NAME': 'urls',         
+        'USER': 'postgres',
+        'PASSWORD': 'y@sH1800',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
+# database config for vercel
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': os.environ.get('DB_NAME'),
+#        'USER': os.environ.get('DB_USER'),
+#        'PASSWORD': os.environ.get('DB_PASSWORD'),
+#        'HOST': os.environ.get('DB_HOST'),
+#        'PORT': os.environ.get('DB_PORT'),
+#    }
+#}
 
 
 # Password validation

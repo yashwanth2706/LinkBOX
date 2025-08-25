@@ -1,5 +1,10 @@
 #!/bin/bash
 
-# build_files.sh
-pip install -r requirements.txt
+# Exit immediately if a command exits with a non-zero status.
+set -e
+
+# Install Python dependencies
+python3 -m pip install -r requirements.txt
+
+# Collect static files
 python3 manage.py collectstatic --noinput

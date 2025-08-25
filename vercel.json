@@ -11,5 +11,6 @@
     { "src": "/static/(.*)", "dest": "/staticfiles/$1" },
     { "src": "/(.*)", "dest": "urlmanager/wsgi.py" }
   ],
-  "buildCommand": "bash build_files.sh"
+  "buildCommand": "bash build_files.sh",
+  "outputDirectory": "staticfiles"
 }

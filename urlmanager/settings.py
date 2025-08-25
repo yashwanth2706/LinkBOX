@@ -32,7 +32,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'link-box-pi.vercel.app', 
-    '*.vercel.app',
+    '.vercel.app',
     '127.0.0.1',
     'localhost'
 ]

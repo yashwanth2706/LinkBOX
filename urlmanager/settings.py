@@ -32,7 +32,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'link-box-pi.vercel.app', 
-    '.vercel.app',
+    '*.vercel.app',
     '127.0.0.1',
     'localhost'
 ]
@@ -140,7 +140,6 @@ USE_TZ = True
 #STATIC_URL = 'static/'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = []
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type

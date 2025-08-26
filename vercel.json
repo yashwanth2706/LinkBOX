@@ -2,12 +2,6 @@
   "version": 2,
   "buildCommand": "bash build_files.sh",
   "outputDirectory": "staticfiles",
-  "functions": {
-    "urlmanager/wsgi.py": {
-      "runtime": "python3.9",
-      "maxLambdaSize": "15mb"
-    }
-  },
   "routes": [
     { "src": "/static/(.*)", "dest": "/staticfiles/$1" },
     { "src": "/(.*)", "dest": "urlmanager/wsgi.py" }

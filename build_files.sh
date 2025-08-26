@@ -5,10 +5,10 @@ set -e
 
 echo "=== Running build_files.sh ==="
 # Install Python dependencies
-python -m pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 
 # Collect static files
-python manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput
 
 echo "=== collectstatic finished ==="
 

@@ -31,7 +31,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'link-box-pi.vercel.app', 
+    'yash1anth.pythonanywhere.com',
+    'link-box-pi.vercel.app',
     '.vercel.app',
     '127.0.0.1',
     'localhost'
@@ -91,24 +92,24 @@ WSGI_APPLICATION = 'urlmanager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
-
-# database config for vercel
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# database config for vercel
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': os.environ.get('DB_NAME'),
+#        'USER': os.environ.get('DB_USER'),
+#        'PASSWORD': os.environ.get('DB_PASSWORD'),
+#        'HOST': os.environ.get('DB_HOST'),
+#        'PORT': os.environ.get('DB_PORT'),
+#    }
+#}
 
 
 # Password validation
@@ -157,8 +158,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'urlsaver:index'         
-LOGOUT_REDIRECT_URL = 'urlsaver:landing_page'        
+LOGIN_REDIRECT_URL = 'urlsaver:index'
+LOGOUT_REDIRECT_URL = 'urlsaver:landing_page'
 
 # Dev-only: emails print to console
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

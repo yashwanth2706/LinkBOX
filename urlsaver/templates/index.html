@@ -343,20 +343,51 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Import via CSV START -->
 
 <!-- Offcanvas for CSV Upload -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="csvUploadCanvas">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="csvUploadCanvas" 
+     data-bs-scroll="true" style="--bs-offcanvas-width: 600px; overflow-y: hidden;">
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title">Upload CSV</h5>
+    <h5 class="offcanvas-title">Import urls via <b>csv</b></h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
   </div>
   <div class="offcanvas-body">
+    <!-- Upload Form -->
     <form id="csvUploadForm" method="post" enctype="multipart/form-data" action="{% url 'urlsaver:import_csv' %}">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="csvFile" class="form-label">Choose CSV file</label>
-            <input class="form-control" type="file" name="csv_file" id="csvFile" accept=".csv" required>
-        </div>
-        <button type="submit" class="btn btn-dark">Upload</button>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="csvFile" class="form-label">Choose a <b>csv</b> file</label>
+        <input class="form-control" type="file" name="csv_file" id="csvFile" accept=".csv" required>
+      </div>
+      <button type="submit" class="btn btn-dark">Upload</button>
     </form>
+        
+    <!-- CSV Import Help Section -->
+    <div class="alert alert-info small mt-3" role="alert">
+      <strong>Recommended column names and data for CSV import to be successful:</strong>
+      <pre class="mt-2 mb-0">
+name,url,category,sub category,tags 
+Profileme,https://www.profileme.dev,website,Profile Builder,"Github,Profile"
+      </pre>
+
+      <p class="mt-2 mb-1"><u>OR</u> (If you don't plan to add category, sub category, or tags, leave blank):</p>
+      <pre class="mb-0">
+name,url,category,sub category,tags 
+YouTube,https://www.youtube.com,,,"streaming, media"
+StackOverflow,https://stackoverflow.com,,community,
+      </pre>
+
+      <p class="mt-2 mb-1"><u>OR</u> (Bulk URLs only, without name/category/tags — names will be auto-generated):</p>
+      <pre class="mb-0">
+url
+https://docs.djangoproject.com/en/5.2/intro/tutorial01/
+https://www.pythonguis.com/tutorials/creating-your-first-pyqt-window/#menu
+      </pre>
+
+      <p class="mt-2 mb-1"><strong>Minimum requirement:</strong></p>
+      <pre class="mb-0">
+url
+https://www.example.com
+      </pre>
+    </div>
   </div>
 </div>
 

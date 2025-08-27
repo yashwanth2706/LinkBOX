@@ -55,8 +55,7 @@ A sleek and intuitive URL manager designed to help professionals save, organize,
 
 #### Prerequisites
 
-* Ensure you have `git`, your preferred backend (e.g., Node.js, Django), and the necessary runtime installed.
-  - This guide is for Django you can configure for other backends as required
+* Ensure you have `git` installed in your system
 
 #### Installation 
 
@@ -157,3 +156,4 @@ Need help or want to contribute?
 ### License
 
 MIT license
+

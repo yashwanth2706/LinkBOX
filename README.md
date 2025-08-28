@@ -5,7 +5,7 @@ A sleek and intuitive URL manager designed to help professionals save, organize,
 ---
 
 ### 🎥 Project Walkthrough
-[![Project Demo](https://github.com/yashwanth2706/LinkBOX/blob/main/walkthrough/project_thumb.png)](https://github.com/yashwanth2706/LinkBOX/blob/main/walkthrough/project.mp4)
+[![Project Demo](https://github.com/yashwanth2706/LinkBOX/raw/main/walkthrough/project_thumb.png)](https://raw.githubusercontent.com/yashwanth2706/LinkBOX/main/walkthrough/project.mp4)
 
 ### Table of Contents
 
@@ -159,5 +159,6 @@ Need help or want to contribute?
 ### License
 
 MIT license
+
 
 

@@ -747,7 +747,7 @@ document.getElementById("csvUploadForm").addEventListener("submit", function(e) 
                     {% if page_obj.has_previous %}
                     <li class="page-item">
                         <a class="page-link"
-                           href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+                        href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}&show_n_records={{ show_n_records }}">
                             Previous
                         </a>
                     </li>
@@ -755,25 +755,49 @@ document.getElementById("csvUploadForm").addEventListener("submit", function(e) 
                     <li class="page-item disabled"><span class="page-link">Previous</span></li>
                     {% endif %}
 
-                    {# Page numbers #}
-                    {% for num in page_obj.paginator.page_range %}
-                    {% if page_obj.number == num %}
-                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
-                    {% else %}
-                    <li class="page-item">
-                        <a class="page-link"
-                           href="?page={{ num }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
-                            {{ num }}
-                        </a>
-                    </li>
+                    {# Show first page #}
+                    {% if page_obj.number > 3 %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}&show_n_records={{ show_n_records }}">1</a>
+                        </li>
+                        {% if page_obj.number > 4 %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
                     {% endif %}
+
+                    {# Page neighbors #}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if num >= page_obj.number|add:-2 and num <= page_obj.number|add:2 %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                    href="?page={{ num }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}&show_n_records={{ show_n_records }}">
+                                    {{ num }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
                     {% endfor %}
+
+                    {# Show last page #}
+                    {% if page_obj.number < page_obj.paginator.num_pages|add:-2 %}
+                        {% if page_obj.number < page_obj.paginator.num_pages|add:-3 %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}&show_n_records={{ show_n_records }}">
+                                {{ page_obj.paginator.num_pages }}
+                            </a>
+                        </li>
+                    {% endif %}
 
                     {# Next button #}
                     {% if page_obj.has_next %}
                     <li class="page-item">
                         <a class="page-link"
-                           href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}">
+                        href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&tag={{ tag }}&category={{ category }}&sub_category={{ sub_category }}&show_n_records={{ show_n_records }}">
                             Next
                         </a>
                     </li>

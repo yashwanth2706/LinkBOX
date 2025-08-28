@@ -47,7 +47,7 @@ A sleek and intuitive URL manager designed to help professionals save, organize,
 ---
 
 ### Who’s It For?
-
+* **Everyone** : )
 * **Educators & Students** — build structured repositories of learning resources, references, or academic research.
 * **Software Engineers** - manage reference materials, documentation, or snippets.
 * **Product Managers / Designers** - centralize design inspirations, competitor analytics, or benchmark sites.
@@ -161,6 +161,7 @@ Need help or want to contribute?
 ### License
 
 MIT license
+
 
 
 

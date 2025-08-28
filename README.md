@@ -41,6 +41,8 @@ A sleek and intuitive URL manager designed to help professionals save, organize,
 * **Export - CSV/JSON/PDF/HTML**: Supports selective export or export all to your preffered file format and sharewith your friends,colleagues or clients
 * **Import - CSV/JSON**: Import all URLs with CSV or JSON
 * **Activity** - Track number of URLs stored/ trashed
+* **Performance** - Targted DOM update for trashed urls preventing fullpage reload, pagination with option to select the number of rows to view
+* **Selective: Deletion/Reverts/Exports** - User can select urls to delete, revert deleted urls from trash and export 
 
 ---
 
@@ -159,6 +161,7 @@ Need help or want to contribute?
 ### License
 
 MIT license
+
 
 
 

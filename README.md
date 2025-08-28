@@ -4,6 +4,9 @@ A sleek and intuitive URL manager designed to help professionals save, organize,
 
 ---
 
+### 🎥 Project Walkthrough
+[![Project Demo](https://github.com/yashwanth2706/LinkBOX/blob/main/walkthrough/project_thumb.png)](https://github.com/yashwanth2706/LinkBOX/blob/main/walkthrough/project.mp4)
+
 ### Table of Contents
 
 * [Why Use LinkBOX](#why-use-linkbox)
@@ -156,4 +159,5 @@ Need help or want to contribute?
 ### License
 
 MIT license
+
 

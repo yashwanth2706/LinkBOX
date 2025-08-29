@@ -4,8 +4,11 @@ A sleek and intuitive URL manager designed to help professionals save, organize,
 
 ---
 
-### 🎥 Project Walkthrough
-[![Project Demo](https://github.com/yashwanth2706/LinkBOX/raw/main/walkthrough/project_thumb.png)](https://raw.githubusercontent.com/yashwanth2706/LinkBOX/main/walkthrough/project.mp4)
+### Project Walkthrough:
+![Project Demo](https://raw.githubusercontent.com/yashwanth2706/LinkBOX/main/walkthrough/login_add_url.gif)
+
+### URLs Import Example:
+![Project Demo](https://raw.githubusercontent.com/yashwanth2706/LinkBOX/main/walkthrough/import_url.gif)
 
 ### Table of Contents
 
@@ -32,6 +35,7 @@ A sleek and intuitive URL manager designed to help professionals save, organize,
 
 ### Key Features
 
+* **Multi User**: Authentication, Autherization, Password-rest
 * **Easy Link Management**: Add, edit, delete, and store links with metadata.
 * **Tagging & Categorization**: Organize links by theme, project, importance, or any custom schema.
 * **Search & Filters**: Retrieve links instantly via tags, date, category, or search terms.

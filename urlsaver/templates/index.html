@@ -661,11 +661,7 @@ document.getElementById("csvUploadForm").addEventListener("submit", function(e) 
                     errorMessage = 'Request timed out.';
                 }
                 // Use your existing popup function for errors
-                if (typeof showPopup === 'function') {
                     showPopup(errorMessage, 'red', true, 3000, 'preview-error');
-                } else {
-                    alert(errorMessage); // Fallback alert
-                }
                 console.error('Error fetching or parsing URL:', error);
             } finally {
                 // Restore the button to its original state

@@ -4,8 +4,15 @@ A sleek and intuitive URL manager designed to help professionals save, organize,
 
 ---
 
-### Project Walkthrough:
+## Project Walkthrough:
+
+### Add URL:
+*(with Create/Login account and notification features)* 
 ![Project Demo](https://raw.githubusercontent.com/yashwanth2706/LinkBOX/main/walkthrough/login_add_url.gif)
+
+### Link Previews:
+![Project Demo](https://raw.githubusercontent.com/yashwanth2706/LinkBOX/main/walkthrough/link_preview.gif)
+
 
 ### URLs Import Example:
 ![Project Demo](https://raw.githubusercontent.com/yashwanth2706/LinkBOX/main/walkthrough/import_url.gif)
@@ -165,6 +172,7 @@ Need help or want to contribute?
 ### License
 
 MIT license
+
 
 
 
